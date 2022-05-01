@@ -15,9 +15,25 @@ class productsController extends Controller
      */
     public function index()
     {
-        //
+        $products = products::where('IsActive',1)->where('categoryID',11)->get();
+        foreach ($products as $product) {
+            $product->categories;
+            $product->brands;
+            $product->memories;
+        }
+        return ['products'=>$products];
     }
 
+    public function uploadFile(Request $request) {
+        $type = $request->type;
+        $data = $request->file('file');
+        $filename = $request->file('file')->getClientOriginalName();
+        $path = public_path('/assets/images/');
+        $data->move($path, $filename);
+        return response()->json([
+            'success' => 'done',
+            'valueimg'=>$data ]);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -45,9 +61,20 @@ class productsController extends Controller
      * @param  \App\Models\products  $products
      * @return \Illuminate\Http\Response
      */
-    public function show(products $products)
+    public function show($productID)
     {
-        //
+
+        $product = products::where('id',$productID)->first();
+        $product->categories;
+        $product->brands;
+        $memories=$product->memories;
+        foreach($memories as $memory){
+            $colors = $memory->colors;
+            foreach($colors as $color){
+                $color->prices;
+            }
+        }
+        return $product;
     }
 
     /**

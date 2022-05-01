@@ -15,7 +15,11 @@ class categoriesController extends Controller
      */
     public function index()
     {
-        //
+        $categories = categories::all();
+        foreach($categories as $category){
+            $category->brands;
+        }
+        return $categories;
     }
 
     /**

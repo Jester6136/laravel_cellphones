@@ -4,6 +4,8 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\colors;
+use DateTime;
+use Faker\Core\Color;
 use Illuminate\Http\Request;
 
 class colorsController extends Controller
@@ -36,7 +38,16 @@ class colorsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $db = new colors();
+        $db->ProductID = $request->ProductID;
+        $db->MemoryID = $request->MemoryID;
+        $db->ColorName = $request->ColorName;
+        $db->ColorImage = $request->ColorImage;
+        $db->Quantity = $request->Quantity;
+        $db->save();
+
+        $db->addprice($db->id,$request->Price,new DateTime()); 
+        return $db;
     }
 
     /**
@@ -68,9 +79,18 @@ class colorsController extends Controller
      * @param  \App\Models\colors  $colors
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, colors $colors)
+    public function update(Request $request,$id)
     {
-        //
+        $db = colors::find($id);
+        $db->ProductID = $request->ProductID;
+        $db->MemoryID = $request->MemoryID;
+        $db->ColorName = $request->ColorName;
+        $db->ColorImage = $request->ColorImage;
+        $db->Quantity = $request->Quantity;
+        $db->save();
+
+        $db->updateprice($db->id,$request->Price,new DateTime()); 
+        return $db;
     }
 
     /**

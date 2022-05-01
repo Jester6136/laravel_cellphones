@@ -25,7 +25,7 @@ class memoriesController extends Controller
      */
     public function create()
     {
-        //
+        // 
     }
 
     /**
@@ -36,7 +36,12 @@ class memoriesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $db = new memories();
+        $db->ProductID = $request->ProductID;
+        $db->MemoryName = $request->MemoryName;
+        $db->Description = $request->Description;
+        $db->save();
+        return $db;
     }
 
     /**
@@ -45,9 +50,21 @@ class memoriesController extends Controller
      * @param  \App\Models\memories  $memories
      * @return \Illuminate\Http\Response
      */
-    public function show(memories $memories)
+    public function show($productID)
     {
-        //
+        $memories = memories::where('productID',$productID)->get();
+        return $memories;
+    }
+
+    public function getcolordetails($memoryID)
+    {   
+        $memories = memories::where('id',$memoryID)->first();
+        $colors = $memories->colors;
+        foreach($colors as $color){
+            $color->prices->get('Price');
+            $color->old_prices->Price;
+        }
+        return $memories;
     }
 
     /**
@@ -56,9 +73,9 @@ class memoriesController extends Controller
      * @param  \App\Models\memories  $memories
      * @return \Illuminate\Http\Response
      */
-    public function edit(memories $memories)
+    public function edit($obj)
     {
-        //
+        // 
     }
 
     /**
@@ -68,9 +85,15 @@ class memoriesController extends Controller
      * @param  \App\Models\memories  $memories
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, memories $memories)
+    public function update(Request $request,$id)
     {
-        //
+        $db = memories::find($id);
+        $db->MemoryName = $request->MemoryName;
+        $db->Description = $request->Description;
+        $db->save();
+
+        return $request;
+        return $db;
     }
 
     /**

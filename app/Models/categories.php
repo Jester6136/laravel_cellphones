@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class categories extends Model
 {
     use HasFactory;
+    protected $table = 'categories';
+
+    public function brands(){
+        return $this->hasMany(brands::class,'CategoryID','id');
+    }
 }

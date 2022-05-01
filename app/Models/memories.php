@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class memories extends Model
 {
     use HasFactory;
+    protected $table = 'memories';
+
+    public function colors(){
+        return $this->hasMany(colors::class,'MemoryID','id');
+    }
 }

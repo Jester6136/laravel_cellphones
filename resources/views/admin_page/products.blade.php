@@ -55,7 +55,7 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>Mã sản phẩm</th>
+                        <th>STT</th>
                         <th>Tên sản phẩm</th>
                         <th>Loại SP</th>
                         <th>Hãng SP</th>
@@ -68,11 +68,11 @@
                         <td class=" text-center">
                             <i data-toggle="" class="fa fa-plus-square-o text-primary h5 m-none" id="" style="cursor: pointer;"></i>
                         </td>
-                        <td>@{{Product.ProductID}}</td>
+                        <td id="@{{Product.id}}">@{{$index+1}}</td>
                         <td>@{{Product.ProductName}}</td>
-                        <td>@{{Product.CategoryName}}</td>
-                        <td>@{{Product.BrandName}}</td>
-                        <td class="image_index"><img src="~/assets/images/@{{Product.ImageName}}" alt="Alternate Text" /></td>
+                        <td>@{{Product.categories.CategoryName}}</td>
+                        <td>@{{Product.brands.BrandName}}</td>
+                        <td class="image_index"><img src="/assets/images/@{{Product.image}}" alt="Alternate Text" /></td>
                         <td class="actions" style="width:65px;">
                             <a href="" class="on-default editt-row" ng-click="openDialogEdit(Product)"><i class="fa fa-pencil"></i></a>
                             <a href="" class="on-default removeMember"><i class="fa fa-trash-o"></i></a>
@@ -283,7 +283,7 @@
         </div>
     </div>
 </div>
-@* Edit *@
+<!-- @* Edit *@ -->
 <div class="mx-auto workform" id="dialogEditmember" style="display: none;" ng-controller="editProductController">
     <div class="row d-flex justify-content-center">
         <div class="col-xl-7 col-lg-8 col-md-9 col-19 text-center">
@@ -302,14 +302,14 @@
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-sm-4 flex-column d-flex">
                                 <label class="form-control-label px-3">Loại sản phẩm<span class="text-danger"> *</span></label>
-                                <select class="selectpicker ecategory" style="border: 1px solid #ccc; font-size: 14px;" ng-model="Megaproduct.CategoryName">
+                                <select class="selectpicker ecategory" style="border: 1px solid #ccc; font-size: 14px;" ng-model="Megaproduct.categories.CategoryName">
                                     <option ng-repeat="Category in Categories" class="@{{Category.STT}}">@{{Category.CategoryName}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-sm-4 flex-column d-flex">
                                 <label class="form-control-label px-3">Hãng sản xuất<span class="text-danger"> *</span></label>
-                                <select id="ebrand" class="selectpicker" style="border: 1px solid #ccc; font-size: 14px;" ng-model="Megaproduct.BrandName">
+                                <select id="ebrand" class="selectpicker" style="border: 1px solid #ccc; font-size: 14px;" ng-model="Megaproduct.brands.BrandName">
                                     <option ng-repeat="Brand in Brands">@{{Brand.BrandName}}</option>
                                 </select>
                             </div>
@@ -323,7 +323,7 @@
                                         <span class="btn btn-default btn-file">
                                             <span class="fileupload-exists">Thay đổi</span>
                                             <span class="fileupload-new">Chọn ảnh</span>
-                                            <input id="eimageProduct" type="file" accept="image/*" ngf-select="UploadFiles($file)">
+                                            <input id="eimageProduct" type="file" accept="image/*">
                                         </span>
                                         <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
                                     </div>
@@ -371,15 +371,15 @@
                             <table class="table table-bordered table-striped mb-none" id="edatatable-editable1">
                                 <thead>
                                     <tr>
-                                        <th class="center">MemoryID</th>
+                                        <th class="center">Bộ nhớ tag</th>
                                         <th class="center">Bộ nhớ</th>
                                         <th class="center">Mô tả</th>
                                         <th class="center" style="width:65px;">Tác vụ</th>
                                     </tr>
                                 </thead>
                                 <tbody id="ettable2">
-                                    <tr class="gradeA" ng-repeat="Memory in Megaproduct.Memories" ng-click="eclickMemory(Memory)">
-                                        <td>@{{Memory.MemoryID}}</td>
+                                    <tr class="gradeA" ng-repeat="Memory in Megaproduct.memories" ng-click="eclickMemory(Memory)">
+                                        <td>@{{Memory.id}}</td>
                                         <td>@{{Memory.MemoryName}}</td>
                                         <td>@{{Memory.Description}}</td>
                                         <td class="actions" style="width:65px;">
@@ -400,7 +400,7 @@
                                 <div class="row justify-content-between text-left">
                                     <div class="form-group col-sm-8 flex-column d-flex">
                                         <label class="form-control-label px-3">Ảnh<span class="text-danger"> *</span></label>
-                                        <div class="fileupload fileupload-new" id="ecolorImage" data-provides="fileupload" style="width: 100%;">
+                                        <div class="fileupload fileupload-new" data-provides="fileupload" style="width: 100%;">
                                             <div class="input-append">
                                                 <div class="uneditable-input">
                                                     <span class="fileupload-preview" id="einputcolorImage">@{{EColorImage}}</span>
@@ -408,7 +408,7 @@
                                                 <span class="btn btn-default btn-file">
                                                     <span class="fileupload-exists">Thay đổi</span>
                                                     <span class="fileupload-new">Chọn ảnh</span>
-                                                    <input type="file" accept="image/*" ngf-select="UploadFiles($file)">
+                                                    <input type="file" accept="image/*" id="Ecolorimage">
                                                 </span>
                                                 <a href="" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
                                             </div>
@@ -437,9 +437,9 @@
                                 <tbody id="ettable3">
                                     <tr class="gradeA" ng-repeat="Color in Colors" ng-click="clickColor(Color)">
                                         <td>@{{Color.ColorName}}</td>
-                                        <td>@{{Color.Price}}</td>
+                                        <td>@{{Color.prices.Price}}</td>
                                         <td>@{{Color.Quantity}}</td>
-                                        <td class="image_index"><img src="~/assets/images/@{{Color.ColorImage}}" /></td>
+                                        <td class="image_index"><img src="/assets/images/@{{Color.ColorImage}}" /></td>
                                         <td class="actions" style="width:65px;">
                                             <a href="" class="on-default removeColor" ng-click="eRemoveColor(Color)"><i class="fa fa-trash-o"></i></a>
                                         </td>
