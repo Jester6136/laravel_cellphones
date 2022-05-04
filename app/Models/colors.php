@@ -12,12 +12,12 @@ class colors extends Model
     protected $table = 'colors';
 
     public function prices() {
-        return $this->hasOne(prices::class, 'colorID', 'id')->where('EndDate',null);
+        return $this->hasOne(prices::class, 'colorID', 'id')->select('Price')->where('EndDate','=',NULL);
     }
 
     public function old_prices() {
         return $this->
-        hasOne(prices::class, 'colorID', 'id')->
+        hasOne(prices::class, 'colorID', 'id')->select('Price')->
         where('EndDate','!=',null)->
         orderBy('EndDate','ASC');
     }

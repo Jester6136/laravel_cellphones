@@ -52,17 +52,17 @@ class memoriesController extends Controller
      */
     public function show($productID)
     {
-        $memories = memories::where('productID',$productID)->get();
+        $memories = memories::where('productID',$productID)->where('is_active',1)->get();
         return $memories;
     }
 
     public function getcolordetails($memoryID)
     {   
-        $memories = memories::where('id',$memoryID)->first();
+        $memories = memories::where('id',$memoryID)->where('is_active',1)->first();
         $colors = $memories->colors;
         foreach($colors as $color){
-            $color->prices->get('Price');
-            $color->old_prices->Price;
+            $color->prices;
+            $color->old_prices;
         }
         return $memories;
     }
@@ -92,7 +92,6 @@ class memoriesController extends Controller
         $db->Description = $request->Description;
         $db->save();
 
-        return $request;
         return $db;
     }
 
@@ -102,8 +101,11 @@ class memoriesController extends Controller
      * @param  \App\Models\memories  $memories
      * @return \Illuminate\Http\Response
      */
-    public function destroy(memories $memories)
+    public function destroy($id)
     {
-        //
+        $db = memories::findOrFail($id);
+        $db->is_active=0;
+        $db->save();
+        return $db;
     }
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\colors;
+use App\Models\memories;
 use App\Models\products;
 use Illuminate\Http\Request;
+use DateTime;
 
 class productsController extends Controller
 {
@@ -22,6 +25,38 @@ class productsController extends Controller
             $product->memories;
         }
         return ['products'=>$products];
+    }
+
+    public function get15procduct($categoryID)
+    {
+        $products = products::where('IsActive',1)->where('categoryID',$categoryID)->take(15)->orderBy('ReleaseDate','DESC')->get();
+        $prices = [];
+        foreach ($products as $product) {
+            $min_price = 1000000000000000;    
+            $old_price = 0;   
+            $product->categories;
+            $product->brands;
+            $memories = $product->memories;
+            foreach($memories as $memory){
+                $colors = $memory->colors;
+                foreach($colors as $color){
+                    $price_new = $color->prices;
+                    if($min_price>$price_new->Price){
+                        $min_price = $price_new->Price;
+                    }
+                    $price_old = $color->old_prices;
+                    if($color->old_prices != null){
+                        if($old_price<$price_old->Price){
+                            $old_price = $price_old->Price;
+                        }
+                    }
+                    else
+                        $old_price = $min_price;
+                }
+            }
+            array_push($prices,[$old_price,$min_price]);
+        }
+        return [$products,$prices];
     }
 
     public function uploadFile(Request $request) {
@@ -52,7 +87,45 @@ class productsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $product = new products();
+        $product->ProductName = $request->ProductName;
+        $product->ReleaseDate = $request->DateRelease;
+        $product->image = $request->ImageName;
+        $product->BrandID = $request->BrandName;
+        $product->CategoryID = $request->CategoryName;
+        $product->Description = $request->Description;
+        $product->save();
+
+        $productID = $product->id;
+
+        $memories = $request->Memories;
+
+        foreach($memories as $memory_request){
+            $memory = new memories();
+            $memory->ProductID = $productID;
+
+            $memory->MemoryName = $memory_request['MemoryName'];
+            $memory->Description = $memory_request['Description'];
+            $memory->save();
+            $memoryID = $memory->id;
+            $colors = $memory_request['Colors'];
+            foreach($colors as $color_request){
+                $color = new colors();
+                $color->MemoryID = $memoryID;
+                $color->ProductID = $productID;
+                $color->Quantity = $color_request['Quantity'];
+                $color->ColorImage = $color_request['ColorImage'];
+                $color->ColorName = $color_request['ColorName'];
+                $color->save();
+
+                $color->addprice($color->id,$color_request['Price'],new DateTime()); 
+            }
+        }
+        $product = products::where('IsActive',1)->where('id',$productID)->first();
+        $product->categories;
+        $product->brands;
+        $product->memories;
+        return $product;
     }
 
     /**
@@ -95,9 +168,16 @@ class productsController extends Controller
      * @param  \App\Models\products  $products
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, products $products)
+    public function update(Request $request,$id)
     {
-        //
+        $db = products::find($id);
+        $db->ProductName = $request->ProductName;
+        $db->ReleaseDate = $request->ReleaseDate;
+        $db->image = $request->image;
+        $db->Description = $request->Description;
+        $db->save();
+        
+        return $db;
     }
 
     /**
@@ -106,8 +186,11 @@ class productsController extends Controller
      * @param  \App\Models\products  $products
      * @return \Illuminate\Http\Response
      */
-    public function destroy(products $products)
+    public function destroy($id)
     {
-        //
+        $db = products::findOrFail($id);
+        $db->IsActive=0;
+        $db->save();
+        return "Deleted";
     }
 }

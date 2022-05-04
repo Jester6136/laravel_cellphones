@@ -11,6 +11,6 @@ class memories extends Model
     protected $table = 'memories';
 
     public function colors(){
-        return $this->hasMany(colors::class,'MemoryID','id');
+        return $this->hasMany(colors::class,'MemoryID','id')->where('is_active',1);
     }
 }

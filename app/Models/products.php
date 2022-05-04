@@ -19,6 +19,6 @@ class products extends Model
     }
 
     public function memories(){
-        return $this->hasMany(memories::class,'ProductID','id');
+        return $this->hasMany(memories::class,'ProductID','id')->where('is_active',1);
     }
 }

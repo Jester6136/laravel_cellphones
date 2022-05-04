@@ -35,5 +35,8 @@ Route::post('products/upload', [productsController::class, 'uploadFile'])->name(
 
 Route::get('memories/getcolordetails/{memoryID}', [memoriesController::class, 'getcolordetails'])->name('get.getcolordetail');
 
-// Route::get('memories/edit_memory?id={id}&MemoryName={MemoryName}&Description={Description}', [memoriesController::class, 'edit_memory'])->name('post.edit_memory');
 
+
+//GUESS============================================
+Route::get('products/get15procduct/{categoryID}', [productsController::class, 'get15procduct'])->name('get.get15products');
+//GUESSEND============================================

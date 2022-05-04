@@ -436,7 +436,7 @@
     </div>
 
     <!-- Vendor -->
-    <script src="/assets/js_controller/angular_path/angular.min.js"></script>
+    <script src="/assets/js_controller/angular_path/angular.js"></script>
     <script src="/assets/vendor/jquery/jquery.min.js"></script>
     <script src="/assets/js_controller/angular_path/dirPagination.js"></script>
     <script src="/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
@@ -447,6 +447,7 @@
     <script src="/assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
     <script src="/assets/js_controller/Init.js"></script>
 
+    
     <!-- Specific Page Vendor -->
     @yield('js')
 

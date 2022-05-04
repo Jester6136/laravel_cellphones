@@ -99,8 +99,11 @@ class colorsController extends Controller
      * @param  \App\Models\colors  $colors
      * @return \Illuminate\Http\Response
      */
-    public function destroy(colors $colors)
+    public function destroy($id)
     {
-        //
+        $db = colors::findOrFail($id);
+        $db->is_active=0;
+        $db->save();
+        return "Deleted";
     }
 }

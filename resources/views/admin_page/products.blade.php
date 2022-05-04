@@ -46,7 +46,7 @@
                 </div>
                 <div class="col-sm-6" style="float:left">
                     <div class="mb-md">
-                        <input type="type" name="name" style="float:right;" placeholder="Tìm kiếm" value="" />
+                        <input type="type" name="name" style="float:right;" placeholder="Tìm kiếm" value="" ng-model="q"/>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
                     </tr>
                 </thead>
                 <tbody id="ttable">
-                    <tr class="gradeA" ng-repeat="Product in Products">
+                <tr dir-paginate="Product in Products|filter: q|itemsPerPage:6" current-page="currentPage">
                         <td class=" text-center">
                             <i data-toggle="" class="fa fa-plus-square-o text-primary h5 m-none" id="" style="cursor: pointer;"></i>
                         </td>
@@ -75,11 +75,16 @@
                         <td class="image_index"><img src="/assets/images/@{{Product.image}}" alt="Alternate Text" /></td>
                         <td class="actions" style="width:65px;">
                             <a href="" class="on-default editt-row" ng-click="openDialogEdit(Product)"><i class="fa fa-pencil"></i></a>
-                            <a href="" class="on-default removeMember"><i class="fa fa-trash-o"></i></a>
+                            <a href="" class="on-default removeMember" ng-click="deleteProduct(Product)"><i class="fa fa-trash-o"></i></a>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <dir-pagination-controls style="float: right; padding-right: 100px;"
+                direction-links="true"
+                boundary-links="true"
+                >
+            </dir-pagination-controls>
         </div>
     </section>
     <!-- end: page -->
@@ -120,21 +125,21 @@
                             <div class="form-group col-sm-4 flex-column d-flex"> <label class="form-control-label px-3">Tên sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="fname" name="fname" placeholder="Nhập Tên" ng-model="NewProduct.ProductName" required> </div>
                             <div class="form-group col-sm-4 flex-column d-flex">
                                 <label class="form-control-label px-3">Ngày ra mắt<span class="text-danger"> *</span></label>
-                                <input id="DateRelease" data-plugin-datepicker name="OrderDate" readonly autocomplete="off" ng-model="NewProduct.DateRelease" required>
+                                <input id="DateRelease" data-plugin-datepicker name="OrderDate" readonly autocomplete="on" ng-model="NewProduct.DateRelease" required>
                             </div>
                         </div>
                         <div class="row justify-content-between text-left">
                             <div class="form-group col-sm-4 flex-column d-flex">
                                 <label class="form-control-label px-3">Loại sản phẩm<span class="text-danger"> *</span></label>
                                 <select class="selectpicker category" id="cName" style="border: 1px solid #ccc; font-size: 14px;" ng-model="NewProduct.CategoryName">
-                                    <option ng-repeat="Category in Categories" class="@{{Category.STT}}">@{{Category.CategoryName}}</option>
+                                    <option ng-repeat="Category in Categories" class="@{{Category.STT}}" value="@{{Category.id}}">@{{Category.CategoryName}}</option>
                                 </select>
                             </div>
 
                             <div class="form-group col-sm-4 flex-column d-flex">
                                 <label class="form-control-label px-3">Hãng sản xuất<span class="text-danger"> *</span></label>
                                 <select id="brand" class="selectpicker" style="border: 1px solid #ccc; font-size: 14px;" ng-model="NewProduct.BrandName">
-                                    <option ng-repeat="Brand in Brands">@{{Brand.BrandName}}</option>
+                                    <option ng-repeat="Brand in Brands" value="@{{Brand.id}}">@{{Brand.BrandName}}</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-4 flex-column d-flex">
@@ -147,7 +152,7 @@
                                         <span class="btn btn-default btn-file">
                                             <span class="fileupload-exists">Thay đổi</span>
                                             <span class="fileupload-new">Chọn ảnh</span>
-                                            <input id="imageProduct" type="file" accept="image/*" ngf-select="UploadFiles($file)">
+                                            <input id="imageProduct" type="file" accept="image/*">
                                         </span>
                                         <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
                                     </div>
@@ -230,9 +235,9 @@
                                                 <span class="btn btn-default btn-file">
                                                     <span class="fileupload-exists">Thay đổi</span>
                                                     <span class="fileupload-new">Chọn ảnh</span>
-                                                    <input type="file" accept="image/*" ngf-select="UploadFiles($file)">
+                                                    <input type="file" id="colorimage" accept="image/*" >
                                                 </span>
-                                                <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
+                                                <a href="#" class="btn btn-default fileupload-exists" id="Acolorimage" data-dismiss="fileupload">Remove</a>
                                             </div>
                                         </div>
                                     </div>
@@ -260,13 +265,24 @@
                                         <td>@{{Color.ColorName}}</td>
                                         <td>@{{Color.Price}}</td>
                                         <td>@{{Color.Quantity}}</td>
-                                        <td class="image_index"><img src="~/assets/images/@{{Color.ColorImage}}" /></td>
+                                        <td class="image_index"><img src="/assets/images/@{{Color.ColorImage}}" /></td>
                                         <td class="actions" style="width:65px;">
                                             <a href="#" class="on-default removeColor"><i class="fa fa-trash-o"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:40px;">
+                        <div class="col-xl-12 col-lg-12 col-md-12 mb-1">
+                            <fieldset class="form-group">
+                            <label for="description">Mô tả</label>
+                            <div ckeditor="text.options" ng-model="text.textInput">
+                                <!-- <ckeditor ng-model="book.description"></ckeditor> -->
+                                <!-- <textarea name="description" class="form-control" id="description" (data)="book.description"  rows="8"></textarea> -->
+                            </fieldset>
                         </div>
                     </div>
 
@@ -318,7 +334,7 @@
                                 <div class="fileupload fileupload-new" data-provides="fileupload" style="width: 100%;" id="eimpressive_image">
                                     <div class="input-append">
                                         <div class="uneditable-input">
-                                            <span class="fileupload-preview" id="eimageName">@{{Megaproduct.ImageName}}</span>
+                                            <span class="fileupload-preview" id="eimageName">@{{Megaproduct.image}}</span>
                                         </div>
                                         <span class="btn btn-default btn-file">
                                             <span class="fileupload-exists">Thay đổi</span>
@@ -379,7 +395,7 @@
                                 </thead>
                                 <tbody id="ettable2">
                                     <tr class="gradeA" ng-repeat="Memory in Megaproduct.memories" ng-click="eclickMemory(Memory)">
-                                        <td>@{{Memory.id}}</td>
+                                        <td>@{{$index+1}}</td>
                                         <td>@{{Memory.MemoryName}}</td>
                                         <td>@{{Memory.Description}}</td>
                                         <td class="actions" style="width:65px;">
@@ -436,7 +452,7 @@
                                 </thead>
                                 <tbody id="ettable3">
                                     <tr class="gradeA" ng-repeat="Color in Colors" ng-click="clickColor(Color)">
-                                        <td>@{{Color.ColorName}}</td>
+                                        <td>@{{$index+1}}</td>
                                         <td>@{{Color.prices.Price}}</td>
                                         <td>@{{Color.Quantity}}</td>
                                         <td class="image_index"><img src="/assets/images/@{{Color.ColorImage}}" /></td>
@@ -449,10 +465,19 @@
                         </div>
                     </div>
 
+                    <div style="margin-top:40px;">
+                            <div class="col-xl-12 col-lg-12 col-md-12 mb-1">
+                                <fieldset class="form-group">
+                                <label for="description">Mô tả</label>
+                                <div ckeditor="text.options" ng-model="text.textInput">
+                                </fieldset>
+                            </div>
+                        </div>
+
                     <footer class="" style="padding: 15px 0px;">
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <button id="dialogConfirmEditProduct" class="btn btn-primary  save" type="button" ng-click="EditProduct(Megaproduct.ProductID,Megaproduct.ProductName,Megaproduct.ReleaseDate)">Lưu</button>
+                                <button id="dialogConfirmEditProduct" class="btn btn-primary  save" type="button" ng-click="EditProduct(Megaproduct.id,Megaproduct.ProductName,Megaproduct.ReleaseDate)">Lưu</button>
                                 <button id="dialogCancelEditProduct" class="btn btn-default  exit" type="button">Đóng</button>
                             </div>
                         </div>
@@ -489,8 +514,8 @@
 
 
 @section('js')
-
-    <script src="/assets/js_controller/angular_path/ng-file-upload.min.js"></script>
+    <script src="//cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
+    <script src="/assets/js_controller/angular_path/angular-ckeditor.js"></script>
     <script src="/assets/js_controller/ProductController.js"></script>
     <script src="/assets/vendor/select2/select2.js"></script>
     <script src="/assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>

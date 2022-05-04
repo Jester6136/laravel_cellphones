@@ -1,4 +1,4 @@
-﻿var myapp = angular.module('Myapp', ['angularUtils.directives.dirPagination','ngFileUpload']);//khai baso module
+﻿var myapp = angular.module('Myapp', ['angularUtils.directives.dirPagination','ckeditor']);//khai baso module
 
 const baseApi = 'http://localhost:8000/api/';
 const productsController = 'products/';
@@ -24,6 +24,7 @@ var checkUnderined = function (o) {
     return typeof(o) == "undefined";
 }
 var ConvertToJsonString = function (Object) {
+
     var BrandName = Object.BrandName;
     var CategoryName = Object.CategoryName;
     var DateRelease = Object.DateRelease;
@@ -64,7 +65,8 @@ var ConvertToJsonString = function (Object) {
                   "DateRelease": "`+ DateRelease + `",
                   "ImageName": "`+ ImageName +`",
                   "Memories": [`+ Base_Memories+`],
-                  "ProductName": "`+ ProductName +`"
+                  "ProductName": "`+ ProductName +`",
+                  "Description": "`+ Object.Description +`"
                 }`
 }
 
@@ -82,7 +84,6 @@ function showAlert(status) {
     }
   }
 
-
 //ProductDetailController
 myapp.controller("productsController", function ($http, $scope, $rootScope, Product_ROM) {
     var connect_api = function (method,url,callback) { 
@@ -96,34 +97,32 @@ myapp.controller("productsController", function ($http, $scope, $rootScope, Prod
           (error) => {console.log(error);showAlert(errorStatus);}
         );
      }
-    $('#dialogConfirmNewProduct').click(function () {
-        $rootScope.Products.push(Product_ROM);
-        Product_ROM.ProductID = "";
-        Product_ROM.ProductName = "";
-        Product_ROM.CategoryName = "";
-        Product_ROM.BrandName = "";
-        Product_ROM.ImageName = "";
-        $scope.$apply();
-    })
 
+     $scope.currentPage = 1;
+    $scope.pageSize = 10;
+    $scope.q = "";
+    $rootScope.text = {
+        textInput : '',
+        options: {
+          language: 'en',
+          allowedContent: true,
+          entities: false
+        }
+    };
     $rootScope.NewProduct = [];
     connect_api('get',baseApi+productsController,(response)=>{
         var Products = response.data.products;
         $rootScope.Products = Products;
+        
+        console.log($rootScope.Products);
     })
-    // $http({
-    //     method: 'get',
-    //     url: 'GetProductsByCategory',
-    //     params: {
-    //         categoryID: 'CT00000001'
-    //     }
-    // }).then(function Success(res) {
-    //     var Products = res.data;
-    //     $rootScope.Products = Products;
-
-    // }, function Error(res) {
-    //     alert("Lấp sản phẩm lỗi");
-    // })
+    
+    $scope.deleteProduct = function (product){
+        connect_api('delete',baseApi+productsController+product.id,(res)=>{
+            $rootScope.Products.splice($rootScope.Products.indexOf(product),1)
+            toastr.success("Xóa thành công");
+        })
+    }
 
     $('#datatable-details').on('click', 'i[data-toggle]', function () {
         var $this = $(this),
@@ -155,10 +154,12 @@ myapp.controller("productsController", function ($http, $scope, $rootScope, Prod
         else if ($this[0].dataset.toggle == 'sub') {
             $this.removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
             connect_api('get',baseApi+'memories/getcolordetails/'+memoryID,(res)=>{
+                console.log(res);
                 var data = GetProductDetail(res.data.colors);
                 var subtable = `<tr><td colspan="7"><table class="table mb-none">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th></th>
                                 <th></th>
                                 <th>Màu tag</th>
@@ -189,19 +190,25 @@ myapp.controller("productsController", function ($http, $scope, $rootScope, Prod
         }
     });
 
+
 })
 var GetProductDetail = function (details) {
     var detailContents = [];
     for (var i = 0; i < details.length; i++) {
+        if (details[i].old_prices == null){
+            details[i].old_prices={};
+            details[i].old_prices.Price=details[i].prices.Price;
+        }
         detailContents.push(`
                         <tr>
+                            <th></th>
                             <th></th>
                             <th></th>
                             <td>${details[i].id}</td>
                             <td>${details[i].ColorName}</td>
                             <td  class="image_index"><img src="/assets/images/`+ details[i].ColorImage + `"/></td>
-                            <td>${details[i].prices.Price}</td>
-                            <td>${details[i].old_prices.Price}</td>
+                            <td align="right">${details[i].prices.Price}</td>
+                            <td align="right">${details[i].old_prices.Price}</td>
                         </tr>
                     `);
     }
@@ -228,7 +235,13 @@ var GetMemoriesDetail = function (details) {
 
 //////////////////////Addproduct////////////////////////////
 //1
-myapp.controller("addProductController", function ($http, $scope, $rootScope, Upload, Product_ROM) {
+myapp.controller("addProductController", function ($http, $scope, $rootScope, Product_ROM) {
+    $('#DateRelease').datepicker({
+        format: 'yy/mm/dd',
+        autoclose: true,
+        todayHighlight: true
+    });
+
     var connect_api = function (method,url,callback) { 
         $http({
           method: method,
@@ -239,17 +252,43 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Up
           },
           (error) => {console.log(error);showAlert(errorStatus);}
         );
-     }
+     } 
+     var connect_api_data = function (method,url,data,callback) { 
+        $http({
+          method: method,
+          url: url,
+          data: data,
+        //   'content-Type': 'application/json',
+        }).then(
+          function (response) {
+            callback(response);
+          },
+          (error) => {console.log(error);showAlert(errorStatus);}
+        );
+       }
+    
+    function uploadFile (filedata, type = 'img') {
+        $scope.image = filedata.name;
+        //upload
+        var postData = new FormData();
+        postData.append('file', filedata);
+        $.ajax({
+          headers: { 'X-CSRF-Token': $('meta[name=csrf_token]').attr('content') },
+          async: true,
+          type: 'post',
+          contentType: false,
+          processData: false,
+          url: baseApi + 'products/upload',
+          data: postData,
+          success: function (res) {
+            console.log('success');
+          },
+          error: function (res) {
+            console.log('loi');
+          },
+        });
+    };
 
-    $('#dialogConfirmNewProduct').click(function () {
-        $rootScope.Products.push(Product_ROM);
-        Product_ROM.ProductID = "";
-        Product_ROM.ProductName = "";
-        Product_ROM.CategoryName = "";
-        Product_ROM.BrandName = "";
-        Product_ROM.ImageName = "";
-        $scope.$apply();
-    })
     connect_api('get',baseApi+categoriesController,(res)=>{
         var CategoryBrand = res.data;
         $scope.Categories = [];
@@ -258,6 +297,7 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Up
             var Catetory = [];
             var category_tmp = CategoryBrand[i];
             Catetory.STT = i;
+            Catetory.id = category_tmp.id;
             Catetory.CategoryID = category_tmp.CategoryID;
             Catetory.CategoryName = category_tmp.CategoryName;
             $scope.Categories.push(Catetory);
@@ -273,35 +313,30 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Up
             }
         }
         $scope.CategoryBrand = CategoryBrand;
-        // $rootScope.NewProduct.CategoryName = $scope.CategoryBrand[0].CategoryName;
         $scope.Brands = $scope.Categories[0].Brands;
-        // $rootScope.NewProduct.BrandName = $scope.Brands[0].BrandName;
     })
-
 
     $('.category').on('change', function (e) {
         var optionSelected = $("option:selected", this);
         var index = optionSelected[0].className;
-        $scope.Brands = $scope.Categories[index].Brands;
-        $rootScope.NewProduct.BrandName = $scope.Brands[0].BrandName;
+        console.log(index);
+        console.log($scope.CategoryBrand);
+        $scope.Brands = $scope.CategoryBrand[index].brands;
     });
+    
+    $('#imageProduct').on('change', function (ev) {
+        var filedata = this.files[0];
+        uploadFile(filedata);
+      });
 
+    $('#colorimage').on('change', function (ev) {
+        var filedata = this.files[0];
+        uploadFile(filedata);
+      });
 
-    $rootScope.UploadFiles = function (file) {  
-        $scope.SelectedFiles = file;
-        if ($scope.SelectedFiles) {
-            Upload.upload({
-                url: 'UploadImage',
-                data: { files: $scope.SelectedFiles }
-            }).then(function Success(res) {
-                $rootScope.tmpImage = res.data[0];
-                toastr.success("Thêm ảnh thành công");
-            }, function Error(res) {
-                toastr.error("Thêm ảnh thất bại");
-            })
-        }
-    }
-
+    $('#addToTablee').click(function () {
+        $rootScope.text.textInput = "";
+      })
     $('#dialogConfirmNewProduct').click(function () {
         $rootScope.NewProduct.ProductName = $rootScope.NewProduct.ProductName;
         $rootScope.NewProduct.DateRelease = $('#DateRelease').val();
@@ -309,37 +344,40 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Up
         $rootScope.NewProduct.CategoryName = $('#cName').val();
         $rootScope.NewProduct.BrandName = $('#brand').val();
         $rootScope.NewProduct.Memories = $rootScope.Memories;
-        console.log($rootScope.NewProduct);
-        $http({
-            method: 'POST',
-            url: 'InsertProduct',
-            data: { p: ConvertToJsonString($rootScope.NewProduct) }
-        }).then(function Success(res) {
+        
+        $rootScope.NewProduct.Description=$rootScope.text.textInput.replace(/(\r\n|\n|\r)/gm, "").replaceAll(`"`,`###`);
+
+        var tmp = ConvertToJsonString($rootScope.NewProduct)
+        console.log(tmp );
+        connect_api_data('post',baseApi+productsController,tmp,(res)=>{
             //console.log(res);
             //Set new to current view
-            Product_ROM.ProductID = $('#fid').val();
+            Product_ROM.id = $('#fid').val();
             Product_ROM.ProductName = $rootScope.NewProduct.ProductName;
             Product_ROM.CategoryName = $rootScope.NewProduct.CategoryName;
             Product_ROM.BrandName = $rootScope.NewProduct.BrandName;
             Product_ROM.ImageName = $('#imageName')[0].textContent;
+
             toastr.success("Thêm thông tin sản phẩm thành công");
+
+            $rootScope.Products.push(res.data);
+
+            Product_ROM.ProductID = "";
+            Product_ROM.ProductName = "";
+            Product_ROM.CategoryName = "";
+            Product_ROM.BrandName = "";
+            Product_ROM.ImageName = "";
+            // $rootScope.$apply();
+
             //Reset value table
             $rootScope.NewProduct.ImageName = '';
-            $rootScope.NewProduct = [];
-            $rootScope.Memories = [];
-            $rootScope.Colors = [];
+            $rootScope.NewProduct = {};
+            $rootScope.Memories = {};
+            $rootScope.Colors = {};
             $rootScope.num = 0;
             $('#imageName').text('')
             $('#colorImage')[0].textContent = "";
             $('#impressive_image').removeClass('fileupload-exists').addClass('fileupload-new');
-            //Reset ID
-            $.get(`/Product/GetNextProductID`).done(
-                function (res) {
-                    $('#fid').val(res);
-                }
-            )
-        }, function Error(res) {
-            toastr.error("Thêm thông tin thất bại");
         })
     })
 
@@ -350,19 +388,31 @@ myapp.controller("memoryTable", function ($http, $scope, $rootScope) {
     $rootScope.num = 0;
     $rootScope.Memories = [];
 
-
     $scope.addMemory = function (Memory) {
-        $rootScope.num = $rootScope.num + 1;
-        $scope.Memory.Number = $rootScope.num;
-        $scope.Memory.MemoryName = $scope.Memory.MemoryName;
-        if (checkUnderined($scope.Memory.Description)) {
-            $scope.Memory.Description = "";
+
+        var status = 0;
+        for (var i = 0; i < $scope.Memories.length; i++) {
+            if ($scope.Memories[i].MemoryName == Memory.MemoryName) {
+                status = 1;
+            }
         }
-        else
-            $scope.Memory.Description = $scope.Memory.Description;
-        $scope.Memory.Colors = [];
-        $rootScope.Memories.push(Memory);
-        $scope.Memory = {};
+        if(status==0){
+            $rootScope.num = $rootScope.num + 1;
+            $scope.Memory.Number = $rootScope.num;
+            $scope.Memory.MemoryName = $scope.Memory.MemoryName;
+            if (checkUnderined($scope.Memory.Description)) {
+                $scope.Memory.Description = ""; 
+            }
+            else
+                $scope.Memory.Description = $scope.Memory.Description;
+            $scope.Memory.Colors = [];
+            $rootScope.Memories.push(Memory);
+            $scope.Memory = {};
+        }
+        else{
+            toastr.error("Đã tồn tại bộ nhớ này");
+        }
+           
     }
 
     $(document).on('click', '.removeMemory', function () {
@@ -396,14 +446,26 @@ myapp.controller("memoryTable", function ($http, $scope, $rootScope) {
 
 
     $scope.addColor = function (Color) {
-        $scope.Color.ColorName = $scope.Color.ColorName;
-        $scope.Color.Price = $scope.Color.Price;
-        $scope.Color.ColorImage = $('#colorImage')[0].textContent;
-        $scope.Color.Quantity = $scope.Color.Quantity;
-        $rootScope.Colors.push(Color);
-        $('#colorImage')[0].textContent = "";
-        $scope.Color = {};
-        $scope.Color.ColorImage = '';
+        var status = 0;
+        for (var i = 0; i < $scope.Colors.length; i++) {
+            if ($scope.Colors[i].ColorName == Color.ColorName) {
+                status = 1;
+            }
+        }
+        if(status==0){
+            $scope.Color.ColorName = $scope.Color.ColorName;
+            $scope.Color.Price = $scope.Color.Price;
+            $scope.Color.ColorImage = $('#colorImage')[0].textContent;
+            $scope.Color.Quantity = $scope.Color.Quantity;
+            $rootScope.Colors.push(Color);
+            $('#colorImage')[0].textContent = "";
+            $scope.Color = {};
+            $scope.Color.ColorImage = '';
+            $('#Acolorimage').removeClass('fileupload-exists').addClass('fileupload-new')
+        }
+        else{
+            toastr.error("Đã tồn tại màu này");
+        }
     }
 })
 
@@ -457,13 +519,14 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
      }
 
 
-
-
-
     $scope.Megaproduct = [];
     $rootScope.openDialogEdit = function (obj) {
         connect_api('get',baseApi+productsController+obj.id,(res)=>{
             $scope.Megaproduct = res.data;
+            if($rootScope.text.textInput!=null){
+                $rootScope.text.textInput=res.data.Description.replaceAll(`###`,`"`);
+            }
+
             //Controller EDIT
 
             console.log($scope.Megaproduct);
@@ -478,6 +541,7 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
                     var Catetory = [];
                     var category_tmp = CategoryBrand[i];
                     Catetory.STT = i;
+                    Catetory.id = category_tmp.id;
                     Catetory.CategoryID = category_tmp.CategoryID;
                     Catetory.CategoryName = category_tmp.CategoryName;
                     $scope.Categories.push(Catetory);
@@ -500,7 +564,6 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
                 $('#dialogEditmember').show();  
             })
             //end menu category 
-
 
             //begin Memoríe Colors
             $scope.Colors = [];
@@ -526,7 +589,6 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
                 ///END EDIT MEMORY
             }
 
-            
             //ADD Memory
             $scope.eaddMemory = function (MemoryName, MDescription) {
                 if (MDescription == null) {
@@ -679,28 +741,24 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
             }
 
             $scope.eRemoveMemory = function (obj) {
-                connect_api('delete',baseApi+memoriesController+obj.id,()=>{
-                    $scope.Memories.splice($scope.Memories.indexOf(obj), 1);
+                connect_api('delete',baseApi+memoriesController+obj.id,(res)=>{
+                    console.log(res.data);
+                    toastr.success("xóa thành công");
+                    $scope.Megaproduct.memories.splice($scope.Megaproduct.memories.indexOf(obj), 1);
+                    $scope.Colors={};
+                    $scope.MemoryName = "";
+                    $scope.MDescription = "";
+
                 })
             }
 
             $scope.eRemoveColor = function (obj) {
-                $http({
-                    url: 'DeleteColor',
-                    params: { id: obj.ColorID },
-                    method: 'post'
-                }).then(function success(res) {
+                connect_api('delete',baseApi+colorsController+obj.id,(res)=>{
                     $scope.Colors.splice($scope.Colors.indexOf(obj), 1);
-                }, function error() {
-                    toastr.error("Xóa lỗi");
                 })
             }
             //EDIT COlor
         })
-
-
-
-
 
         $('#eimpressive_image').removeClass('fileupload-new').addClass('fileupload-exists');
         
@@ -746,22 +804,24 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
     });
 
     $scope.EditProduct = function (ProductID, ProductName, ReleaseDate) {
-        var ImageName = $('#eimageName').text()
-        $http({
-            url: 'EditProduct',
-            params: { id: ProductID, name: ProductName, date: ReleaseDate, imageName: ImageName },
-            method: 'post'
-        }).then(function success() {
+        var request = {};
+        request.ProductID =ProductID
+        request.ProductName =ProductName
+        request.ReleaseDate =ReleaseDate
+        request.Description =$rootScope.text.textInput.replace(/(\r\n|\n|\r)/gm, "").replaceAll(`"`,`###`);
+        request.image  =$('#eimageName').text();
+        
+        console.log(request);
+        connect_api_data('put',baseApi+productsController+ProductID,request,(res)=>{
+            console.log(res);
             for (var i = 0; i < $rootScope.Products.length; i++) {
-                if ($rootScope.Products[i].ProductID == ProductID) {
+                if ($rootScope.Products[i].id == ProductID) {
                     $rootScope.Products[i].ProductName = ProductName;
-                    $rootScope.Products[i].ImageName = ImageName;
+                    $rootScope.Products[i].image = request.image;
                 }
             }
             toastr.success("Sửa thành công")
             $('#dialogEditmember').hide();
-        }, function error() {
-            toastr.error("Sửa thất bại")
         })
     }   
 })
@@ -773,7 +833,7 @@ $('#addToTablee').click(function () {
             $('#fid').val(res);
         }
     )
-
+        
     $('#dialogAddproduct').show();
 
 });
