@@ -350,7 +350,7 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Pr
         var tmp = ConvertToJsonString($rootScope.NewProduct)
         console.log(tmp );
         connect_api_data('post',baseApi+productsController,tmp,(res)=>{
-            //console.log(res);
+            console.log(res);
             //Set new to current view
             Product_ROM.id = $('#fid').val();
             Product_ROM.ProductName = $rootScope.NewProduct.ProductName;
@@ -655,7 +655,7 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
                 var index =-1;
                 var checked = 0;
 
-                var MemoryID = $('#ettable2 .selected').children()[0].textContent;
+                var MemoryID = $('#ettable2 .selected').children()[0].className;
                 for (var i = 0; i < $scope.Megaproduct.memories.length; i++) {
                     if ($scope.Megaproduct.memories[i].id == MemoryID) {
                         index = i;

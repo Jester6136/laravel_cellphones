@@ -41,4 +41,8 @@ class colors extends Model
         $db2->StartDate= $date;
         $db2->save();
     }
+
+    public function memory() {
+        return $this->hasOne(memories::class, 'id', 'MemoryID');
+    }
 }

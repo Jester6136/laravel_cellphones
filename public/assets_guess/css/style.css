@@ -1401,7 +1401,7 @@ p.old-price {
 .product-img img {
     transition: 0.3s;
     max-width: 230px;
-    width: 90%;
+    width: 70%;
 }
 
 .offers {
@@ -1566,6 +1566,7 @@ button.compare {
 }
 
 p.Price-now {
+    font-weight: 600;
     margin: 10px;
     color: #e34646;
 }
@@ -1799,10 +1800,27 @@ p#status {
     background: #ffffff;
     color: #277cea;
 }
+.order-info h4{
+    font-size: 17px;
+    padding: 2px;
+    width: 100%;
+    display: flex;
+    margin: 0px;
+}
+.order-info{
+}
+.order-info p{
+    font-weight: 300 !important;
+    margin: 0px;
+}
 
 .order-online button:hover {
-    background: #ffffff;
-    color: #e11b1e;
+    /* background: #ffffff;
+    color: #e11b1e; */
+}
+.order-more button:hover {
+    /* background: #ffffff;
+    color: #e11b1e; */
 }
 
 .order h4 {
@@ -1827,6 +1845,7 @@ p#status {
 }
 
 .order-online button {
+    cursor: pointer;
     background: linear-gradient(#f52f32,#e11b1e);
     border-radius: 6px;
     width: 100%;
@@ -1834,7 +1853,22 @@ p#status {
     color: white;
 }
 
+.order-more button {
+    cursor: pointer;
+    background: #ffffff;
+    color: #e11b1e;
+    border-radius: 6px;
+    width: 100%;
+    border: 1px solid;
+}
+
 .order-online h4 {
+    font-size: 15px !important;
+    display: flex;
+    flex-direction: column;
+    margin: 7px;
+}
+.order-more h4 {
     font-size: 15px !important;
     display: flex;
     flex-direction: column;
@@ -2224,6 +2258,44 @@ img.small-banner {
         border-color: #e0052b;
     }
 
+/* // */
+    .box-option-config2 {
+        margin: 7px;
+        font-size: 15px;
+        cursor: pointer;
+        box-shadow: 0 2px 3px 0 rgb(0 0 0 / 15%);
+        width: 200px;
+        align-items: center;
+        display: flex;
+        border: 1px solid #eaeaea;
+        flex-direction: column;
+        text-align: center;
+        border-radius: 6px;
+    }
+    
+        .box-option-config2.active {
+            border-color: #e0052b;
+        }
+        
+.config2 .box-option-config2 .special-price {
+    position: static;
+}
+
+.config2 {
+    padding: 10px;
+    /* justify-content: space-between; */
+    /* display: flex; */
+    /* width: 100%; */
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 12 px 0 px;
+    font-size: 13px;
+}
+
+.box-option-config2 p {
+    margin: 5px 0px 5px 0px;
+}
+/* // */
 .color {
     display: grid;
     grid-template-columns: auto auto auto;

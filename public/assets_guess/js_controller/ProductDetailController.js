@@ -1,56 +1,87 @@
-﻿myapp.controller('ProductDetailController', function ($http, $scope, $rootScope) {
+﻿const cartController = "cart/";
+myapp.controller('ProductDetailController', function ($http, $scope, $rootScope) {
+    var connect_api_data = function (method,url,data,callback) { 
+        $http({
+          method: method,
+          url: url,
+          data: data,
+          'content-Type': 'application/json',
+        }).then(
+          function (response) {
+            callback(response);
+          },
+          (error) => {console.log(error);showAlert(errorStatus);}
+        );
+       }
+
+    var connect_api = function (method,url,callback,status='Thao tác thành công!') { 
+        $http({
+          method: method,
+          url: url,
+        }).then(
+          function (response) {
+            callback(response);
+            if(status!=""){
+                toastr.success(status);
+            }
+          },
+          (error) => {console.log(error);toastr.error('Lỗi rồi!');}
+        );
+     }
+
     var ROM_product = JSON.parse(localStorage.getItem('product'));
     console.log(ROM_product)
     //Set begin price
-    $rootScope.OldPrice = ROM_product.OldPrice;
-    $rootScope.NewPrice = ROM_product.NewPrice;
+    $rootScope.OldPrice = ROM_product.old_price;
+    $rootScope.NewPrice = ROM_product.min_price;
     $rootScope.SelectedProduct =[];
     $rootScope.SelectedProduct.ProductID = ROM_product.ProductID;
-    $rootScope.SelectedProduct.MemoryID = ROM_product.MemoryID;
+    $rootScope.SelectedProduct.MemoryID = ROM_product.id;
+    
     //Get Product
-    $http({
-        method: 'get',
-        params: { productID: ROM_product.ProductID },
-        url: '/Products/GetProductDetail'
-    }).then(function Success(res) {
-        //Set rootscope product input
-        var product = JSON.parse(JSON.parse(res.data))[0];
-        $rootScope.Product = [];
-        //Set product format
-        for (var i = 0; i < product.Memories.length; i++) {
-            var memo = product.Memories[i]
-            memo.NewPrice = numberFormat.format(memo.NewPrice)
-            memo.OldPrice = numberFormat.format(memo.OldPrice)
+
+    connect_api('get',baseApi+'products/getprocductdetail/'+ ROM_product.ProductID,(res)=>{
+        var product = res.data[0];
+        var price_memories = res.data[1];
+        // product.memories.forEach(x=> x.old_price = )
+        for(var i = 0; i< product.memories.length;i++){
+            element = product.memories[i];
+            element.old_price = numberFormat.format(price_memories[i][0])
+            element.new_price = numberFormat.format(price_memories[i][1])
         }
-        //Set product memory
-        $rootScope.Product.Memories = product.Memories;
+        
+        console.log(product);
+        $rootScope.Product={};
+        $rootScope.Product.Memories = []
+        $rootScope.Product.Memories = product.memories;
         //Selected product
         $rootScope.SelectedProduct.ProductName = product.ProductName;
         var Selected_Memo;
-        for (var i = 0; i < product.Memories.length; i++) {
-            if (product.Memories[i].MemoryID == ROM_product.MemoryID) {
-                Selected_Memo = product.Memories[i];
+        for (var i = 0; i < product.memories.length; i++) {
+            if (product.memories[i].id == ROM_product.id) {
+                Selected_Memo = product.memories[i];
                 $rootScope.Product.Memories[i].active = 'active'
             }
 
-            for (var j = 0; j < product.Memories[i].Colors.length; j++) {
+            for (var j = 0; j < product.memories[i].colors.length; j++) {
                 //Get begin image color
-                if (product.Memories[i].Colors[j].ColorID == ROM_product.ColorID)
-                    $rootScope.BigImage = product.Memories[i].Colors[j].ColorImage;
-                product.Memories[i].Colors[j].Price = numberFormat.format(product.Memories[i].Colors[j].Price)
+                if (product.memories[i].colors[j].id == ROM_product.ColorID)
+                    $rootScope.BigImage = product.memories[i].colors[j].ColorImage;
+                product.memories[i].colors[j].prices.Price = numberFormat.format(product.memories[i].colors[j].prices.Price)
             }
             //Set product memory colors
-            $rootScope.Product.Memories[i].Colors = product.Memories[i].Colors;
+            $rootScope.Product.Memories[i].Colors = product.memories[i].colors;
         }
         $rootScope.Colors = Selected_Memo.Colors
         $rootScope.Product.ProductName = product.ProductName;
         $rootScope.Product.ProductID = product.ProductID;
-        $rootScope.Product.CategoryName = product.CategoryName;
-        $rootScope.Product.BrandName = product.BrandName;
-        $rootScope.Product.ImageName = product.ImageName;
-    }, function Error(res) {
-        console.log(res);
-    })
+        $rootScope.Product.CategoryName = product.categories.CategoryName;
+        $rootScope.Product.BrandName = product.brands.BrandName;
+        $rootScope.Product.ImageName = product.image;
+        $(".full-detail").html(product.Description.replaceAll('###','"'));
+        $rootScope.Product.Description = product.Description;
+        $rootScope.BigImage = ROM_product.colors[0].ColorImage;
+    },"" )
     //chang status memo
     $('.config').on('click', '.box-option-config', function () {
         if ($(this).hasClass('active')) {
@@ -86,8 +117,8 @@
     })
     //change memory
     $scope.selectColor = function (memo) {
-        $rootScope.OldPrice = memo.OldPrice;
-        $rootScope.NewPrice = memo.NewPrice;
+        $rootScope.OldPrice = memo.old_price;
+        $rootScope.NewPrice = memo.new_price;
         $rootScope.Colors = memo.Colors
         $rootScope.SelectedProduct.MemoryID = memo.MemoryID;
         $rootScope.SelectedProduct.MemoryName = memo.MemoryName;
@@ -97,48 +128,44 @@
         $rootScope.BigImage = color.ColorImage;
     }
     //change color price
-    $scope.selectColorPrice = function (color) {
-        $rootScope.SelectedProduct.ColorID = color.ColorID
+    $scope.selectColorPrice = function (color) {    
+        $rootScope.SelectedProduct.ColorID = color.id
         $rootScope.SelectedProduct.ColorName = color.ColorName
         $rootScope.SelectedProduct.NewPrice = color.Price
         $rootScope.SelectedProduct.OldPrice = ROM_product.OldPrice;
     }
     //add to cart
     $scope.addCart = function (SelectedProduct) {
+        connect_api('get',baseApi+cartController,(res)=>{
+            console.log(res.data);
+            
+        })
         //If login
-        if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
+        // if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
             //Get object cart
             $scope.tocart = []
             var user = JSON.parse(sessionStorage.getItem('khach'));
-            $scope.tocart.UserID = user.CustomerID
+            // $scope.tocart.UserID = user.CustomerID
+            $scope.tocart.UserID = 1;
             $scope.tocart.ColorID = SelectedProduct.ColorID;
-            $scope.tocart.MemoryID = SelectedProduct.MemoryID;
-            $scope.tocart.ProductID = SelectedProduct.ProductID;
             var newcartJson = ConvertToJsonString($scope.tocart).replace(/\s/g, '');
             console.log(newcartJson);
             //If have
             if (typeof SelectedProduct.ColorID !== 'undefined') {
-                $http({
-                    method: 'post',
-                    params: { cart: newcartJson },
-                    url: "/Cart/InsertCart"
-                }).then(function success(res) {
+                connect_api_data('post',baseApi+cartController,$scope.tocart,(res)=>{
                     $rootScope.CartQuantity += 1;
                     localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
-                    window.location.href = '/Cart/Index';
+                    window.location.href = 'cart';
                     console.log(res);
-                }, function error(res) {
-                    console.log(res);
-                    console.log('loi add cart')
                 })
             }
             else {
                 toastr.info("Hãy chọn màu");
             }
-        }
-        else {
-            toastr.info("Hãy đăng nhập");
-        }
+        // }
+        // else {
+        //     toastr.info("Hãy đăng nhập");
+        // }
        
     }
 })

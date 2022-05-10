@@ -1,5 +1,4 @@
-﻿
-const baseApi = 'http://localhost:8000/api/';
+﻿const baseApi = 'http://localhost:8000/api/';
 const productsController = 'products/';
 const memoriesController = 'memories/';
 const categoriesController = 'categories/';
@@ -32,8 +31,8 @@ myapp.controller("menuController", function ($scope, $http, $rootScope) {
 
     connect_api('get',baseApi+categoriesController,(res)=>{
         $scope.categories = res.data;
-        console.log($scope.categories);
-    })
+        // console.log($scope.categories);
+    },"")
 
     // $http.get("/Home/GetMenu").then(function Success(res) {
     //     var table = JSON.parse(JSON.parse(res.data));
@@ -103,6 +102,7 @@ myapp.controller("loginController", function ($rootScope, $window, $http, $scope
     $rootScope.Khach = null;
     $rootScope.remember = false;
     $rootScope.userName = "";
+    
     $rootScope.Login = function (un, pw, rp) {
         $http({
             method: 'get',
@@ -140,6 +140,7 @@ myapp.controller("loginController", function ($rootScope, $window, $http, $scope
             sessionStorage.setItem("khach", "");
         });
     }
+
     $rootScope.LInLout = function () {
         if ($rootScope.lInOut == "SignIn") {
             $rootScope.Finout = "#myModal";

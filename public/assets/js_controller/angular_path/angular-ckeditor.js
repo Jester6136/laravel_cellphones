@@ -84,6 +84,7 @@
 
   function ckeditorController($scope, $element, $attrs, $parse, $q) {
     var config = $parse($attrs.ckeditor)($scope) || {};
+    config.height = 400;
     var editorElement = $element[0];
     var instance;
     var readyDeferred = $q.defer(); // a deferred to be resolved when the editor is ready

@@ -15,7 +15,15 @@ class cartController extends Controller
      */
     public function index()
     {
-        //
+        $cart = cart::get();
+        foreach($cart as $item){
+            $color = $item->color;
+            $color->prices;
+            $color->old_prices;
+            $memory = $color->memory;
+            $memory->product;
+        }
+        return $cart;
     }
 
     /**
@@ -36,7 +44,11 @@ class cartController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cart = new cart();
+        $cart->CustomerID = $request->UserID;
+        $cart->ColorID = $request->ColorID;
+        $cart->save();
+        return $cart;
     }
 
     /**

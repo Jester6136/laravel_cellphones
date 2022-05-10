@@ -523,4 +523,3 @@
     <script src="/assets/vendor/toast/toastr.min.js"></script>
     <script src="/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
 @stop
-

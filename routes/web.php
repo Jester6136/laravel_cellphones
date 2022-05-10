@@ -20,3 +20,23 @@ Route::get('/', function () {
 Route::get('/admin/products', function () {
     return view('admin_page.products');
 });
+
+Route::get('/productdetail', function () {
+    return view('guess_page.productdetail');
+});
+
+Route::get('/cart', function () {
+    return view('guess_page.cart');
+});
+Route::get('/payment_info', function () {
+    return view('guess_page.payment_info');
+});
+Route::get('/voucher', function () {
+    return view('guess_page.voucher');
+});
+Route::get('/payment', function () {
+    return view('guess_page.payment');
+});
+Route::get('/cart-success', function () {
+    return view('guess_page.cart-success');
+});

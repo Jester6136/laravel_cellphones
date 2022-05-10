@@ -7,6 +7,7 @@ use App\Http\Controllers\api\categoriesController;
 use App\Http\Controllers\api\brandsController;
 use App\Http\Controllers\api\memoriesController;
 use App\Http\Controllers\api\colorsController;
+use App\Http\Controllers\api\cartController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::resource('products', productsController::class);
+Route::resource('cart', cartController::class);
 
 Route::resource('memories', memoriesController::class);
 Route::resource('colors', colorsController::class);
@@ -39,4 +41,5 @@ Route::get('memories/getcolordetails/{memoryID}', [memoriesController::class, 'g
 
 //GUESS============================================
 Route::get('products/get15procduct/{categoryID}', [productsController::class, 'get15procduct'])->name('get.get15products');
+Route::get('products/getprocductdetail/{productID}', [productsController::class, 'getProductDetails'])->name('get.getprocductdetail');
 //GUESSEND============================================

@@ -126,7 +126,7 @@
             <div class="shadow"></div>
             <div class="product col-4 col-m-5 col-s-10" ng-repeat="Product in Products">    
                 <div class="product-img">
-                    <img src="/assets/images/@{{Product.image}}" alt="">
+                    <img src="/assets/images/@{{Product.image_product}}" alt="">
                 </div>
                 <div class="product-info">
                     <h4 class="product-name">@{{Product.ProductName}}</h4>
@@ -146,7 +146,7 @@
                         <p>1 đánh giá</p>
                     </div>  
                     <div class="product-btn">
-                        <a href="/Products/ProductDetail"><button class="buy-btn" ng-click="getProduct(Product)">Mua ngay</button></a>
+                        <a href=""><button class="buy-btn" ng-click="getProduct(Product)">Mua ngay</button></a>
                         <a href=""><button class="compare">So sánh</button></a>
                     </div>
                 </div>

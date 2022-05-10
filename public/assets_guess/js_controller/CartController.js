@@ -1,4 +1,22 @@
-﻿myapp.controller('cartController', function ($http, $scope, $rootScope) {
+﻿const cartController = "cart/";
+myapp.controller('cartController', function ($http, $scope, $rootScope) {
+
+    var connect_api = function (method,url,callback,status='Thao tác thành công!') { 
+        $http({
+          method: method,
+          url: url,
+        }).then(
+          function (response) {
+            callback(response);
+            if(status!=""){
+                toastr.success(status);
+            }
+          },
+          (error) => {console.log(error);toastr.error('Lỗi rồi!');}
+        );
+     }
+    
+
     if (localStorage.getItem("cartQuantity") === null) {
         $rootScope.CartQuantity = 0
     }
@@ -9,43 +27,35 @@
     $scope.Cart = []
     $scope.sumPrice = 0;
     $scope.sumPriceShow = "0";
-    if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
-        var user = JSON.parse(sessionStorage.getItem('khach'));
-        var UserID = user.CustomerID
-        var DeliveryAddress = user.DeliveryAddress;
-        var Phone = user.Phone;
-        var CustomerName = user.CustomerName;
-        $scope.Order.CustomerID = UserID;
-        $scope.Order.CustomerName = CustomerName;
-        $scope.Order.DeliveryAddress = DeliveryAddress;
-        $scope.Order.Phone = Phone;
+
+   
+    // if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
+    //     var user = JSON.parse(sessionStorage.getItem('khach'));
+    //     var UserID = user.CustomerID
+    //     var DeliveryAddress = user.DeliveryAddress;
+    //     var Phone = user.Phone;
+    //     var CustomerName = user.CustomerName;
+    //     $scope.Order.CustomerID = UserID;
+    //     $scope.Order.CustomerName = CustomerName;
+    //     $scope.Order.DeliveryAddress = DeliveryAddress;
+    //     $scope.Order.Phone = Phone;
 
 
-        $http({
-            method: 'get',
-            params: { userID: UserID },
-            url: '/Cart/GetCart'
-        }).then(function success(res) {
-            var json_obj = JSON.parse(JSON.parse(res.data))
-            $scope.Cart = json_obj;
-
-            for (var i = 0; i < $scope.Cart.length; i++) {
-                var product = $scope.Cart[i]
-                product.Quantity = 1;
-                product.Price = product.NewPrice
-                $scope.sumPrice += product.Price;
-                product.NewPrice = numberFormat.format(product.NewPrice)
-                product.OldPrice = numberFormat.format(product.OldPrice)
-            }
-            $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
-            console.log($scope.Cart )
-        }, function error(res) {
-            console.log(res);
-        })
-    }
-    else {
-        toastr.info("Hãy đăng nhập để xem giỏ hàng của bạn");
-    }
+    connect_api('get',baseApi+cartController,(res)=>{
+        $scope.Cart = res.data;
+        console.log($scope.Cart );
+        for(var i=0;i<$scope.Cart.length;i++){
+            var element = $scope.Cart[i];
+            $scope.sumPrice+=element.color.prices.Price*element.Quantity;
+            element.old_prices = numberFormat.format(element.color.old_prices.Price)
+            element.new_price = numberFormat.format(element.color.prices.Price)
+        }
+        $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
+    })
+    // }
+    // else {
+    //     toastr.info("Hãy đăng nhập để xem giỏ hàng của bạn");
+    // }
 
     $scope.delete = function (obj) {
         $scope.Cart.splice($scope.Cart.indexOf(obj), 1);
@@ -64,15 +74,16 @@
     $scope.sub = function (obj) {
         if (obj.Quantity > 1) {
             obj.Quantity -= 1;
-            $scope.sumPrice -= obj.Price;
+            $scope.sumPrice -= obj.color.prices.Price;
             $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
         }
     }
     $scope.add = function (obj) {
         if (obj.Quantity < 999) {
             obj.Quantity += 1;
-            $scope.sumPrice += obj.Price;
+            $scope.sumPrice += obj.color.prices.Price;
             $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
+            
         }
     }
     $scope.addOrder = function () {

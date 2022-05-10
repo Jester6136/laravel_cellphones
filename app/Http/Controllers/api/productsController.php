@@ -30,16 +30,28 @@ class productsController extends Controller
     public function get15procduct($categoryID)
     {
         $products = products::where('IsActive',1)->where('categoryID',$categoryID)->take(15)->orderBy('ReleaseDate','DESC')->get();
-        $prices = [];
-        foreach ($products as $product) {
-            $min_price = 1000000000000000;    
-            $old_price = 0;   
+        foreach($products as $product){
+            $product_id = $product->id;
+            $product_name = $product->ProductName;
+            $product_image = $product->image;
+
             $product->categories;
             $product->brands;
+
             $memories = $product->memories;
             foreach($memories as $memory){
+                $memory->product_id = $product_id;
+                $memory->ProductName = $product_name . " | " . $memory->MemoryName;
+                $memory->image = $product_image;
+
+                $min_price = 1000000000000000;
+                $old_price = 0;
                 $colors = $memory->colors;
+                $image_product = "";
                 foreach($colors as $color){
+                    if($image_product==""){
+                        $image_product = $color->ColorImage;
+                    }
                     $price_new = $color->prices;
                     if($min_price>$price_new->Price){
                         $min_price = $price_new->Price;
@@ -53,10 +65,40 @@ class productsController extends Controller
                     else
                         $old_price = $min_price;
                 }
+                $memory->image_product = $image_product;
+                $memory->min_price = $min_price;
+                $memory->old_price = $old_price;
             }
-            array_push($prices,[$old_price,$min_price]);
         }
-        return [$products,$prices];
+
+        return $products;
+    }
+
+    public function getProductDetails($productID){
+        $product = products::where('IsActive',1)->where('id',$productID)->first();
+        $prices = [];
+
+            $product->categories;
+            $product->brands;
+            $memories = $product->memories;
+            foreach($memories as $memory){
+                $new_price = 0;
+                $old_price = null;
+                $colors = $memory->colors;
+                foreach($colors as $color){
+                    $new_price = $color->prices->Price;
+                    if($color->old_prices != null){
+                        $old_price = $color->old_prices->Price;
+                    }
+                    else{
+                        $old_price = $new_price;
+                    }
+                    
+                }
+                array_push($prices,[$old_price,$new_price]);
+            }
+
+        return [$product,$prices];
     }
 
     public function uploadFile(Request $request) {
@@ -87,6 +129,7 @@ class productsController extends Controller
      */
     public function store(Request $request)
     {
+        
         $product = new products();
         $product->ProductName = $request->ProductName;
         $product->ReleaseDate = $request->DateRelease;
@@ -99,7 +142,6 @@ class productsController extends Controller
         $productID = $product->id;
 
         $memories = $request->Memories;
-
         foreach($memories as $memory_request){
             $memory = new memories();
             $memory->ProductID = $productID;
