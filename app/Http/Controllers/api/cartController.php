@@ -15,11 +15,18 @@ class cartController extends Controller
      */
     public function index()
     {
-        $cart = cart::get();
+        $cart = cart::all();
         foreach($cart as $item){
             $color = $item->color;
-            $color->prices;
-            $color->old_prices;
+            $new_price = $color->prices;
+            $old_price = $color->old_prices;
+            $item->new_price =$new_price->Price;
+            if($old_price==null){
+                $item->old_price =$new_price->Price;
+            }
+            else{
+                $item->old_price =$old_price->Price;
+            }
             $memory = $color->memory;
             $memory->product;
         }
@@ -85,6 +92,18 @@ class cartController extends Controller
         //
     }
 
+
+    public function update_carts(Request $request)
+    {
+        $carts= $request->toArray();
+        
+        foreach($carts as $cart){
+            $cart_update = cart::find($cart['id']);
+            $cart_update->Quantity = $cart['Quantity'];
+            $cart_update->save();
+        }
+        return $carts;
+    }
     /**
      * Remove the specified resource from storage.
      *

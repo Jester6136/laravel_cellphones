@@ -20,7 +20,7 @@
                     </div>
                     <div class="box-price">
                         <p class="Price-now">@{{cart.new_price}}</p>
-                        <p class="Price-old">@{{cart.old_prices}}</p>
+                        <p class="Price-old">@{{cart.old_price}}</p>
                         <div class="Quantity">
                             <button class="btn-left l" ng-click="sub(cart)">-</button>
                             <input type="text" class="val q" value="@{{cart.Quantity}}" readonly>
@@ -38,7 +38,7 @@
             </div>
             
             <div class="buy-detail">
-                <div class="order-online">
+                <div class="order-online" ng-click=go_payment_info(Cart)>
                     <button>
                         <h4>Tiến hành đặt hàng</h4>
                     </button>

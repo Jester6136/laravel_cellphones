@@ -61,7 +61,7 @@
                         </div>
                     </div>
                 </a>
-                <a class="cart" href="/Cart/Index">
+                <a class="cart" href="/cart">
                     <div class="box-about-3">
                         <div class="box-about-icon">
                             <i class="fas fa-shopping-bag"></i>

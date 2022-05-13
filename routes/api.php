@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\productsController;
 use App\Http\Controllers\api\categoriesController;
 use App\Http\Controllers\api\brandsController;
+use App\Http\Controllers\api\customersController;
 use App\Http\Controllers\api\memoriesController;
 use App\Http\Controllers\api\colorsController;
 use App\Http\Controllers\api\cartController;
@@ -30,6 +31,7 @@ Route::resource('cart', cartController::class);
 
 Route::resource('memories', memoriesController::class);
 Route::resource('colors', colorsController::class);
+
 Route::resource('categories', categoriesController::class);
 Route::resource('brands', brandsController::class);
 
@@ -39,7 +41,13 @@ Route::get('memories/getcolordetails/{memoryID}', [memoriesController::class, 'g
 
 
 
+
+
 //GUESS============================================
+Route::post('customers/get', [customersController::class, 'show_cus'])->name('get.show_cus');
+Route::post('cart/update_carts', [cartController::class, 'update_carts'])->name('put.update_carts');
+// Route::get('customers/get', [customersController::class, 'show_cus'])->name('get.show_cus');
+
 Route::get('products/get15procduct/{categoryID}', [productsController::class, 'get15procduct'])->name('get.get15products');
 Route::get('products/getprocductdetail/{productID}', [productsController::class, 'getProductDetails'])->name('get.getprocductdetail');
 //GUESSEND============================================

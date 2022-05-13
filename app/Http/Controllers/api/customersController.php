@@ -16,6 +16,7 @@ class customersController extends Controller
     public function index()
     {
         //
+        return ' ngu';
     }
 
     /**
@@ -45,11 +46,31 @@ class customersController extends Controller
      * @param  \App\Models\customers  $customers
      * @return \Illuminate\Http\Response
      */
-    public function show(customers $customers)
+    public function show($customer)
     {
-        //
+        // 
     }
 
+    // public function show_cus($email,$password)
+    // {
+    //     return customers::where("Email",$email)->where("Password",$password)->first();
+    // }
+
+    public function show_cus(Request $customer)
+    {
+        $customer = customers::where("Email",$customer->email)->where("Password",$customer->password)->first();
+        $carts = $customer->cart;
+        if($carts == null){
+            return 0;
+        }
+        $quantity = 0;
+        foreach($carts as $cart){
+            $quantity++;
+        }
+       
+        $customer->Quantity = $quantity;
+        return $customer;
+    }
     /**
      * Show the form for editing the specified resource.
      *

@@ -2,6 +2,7 @@
 const productsController = 'products/';
 const memoriesController = 'memories/';
 const categoriesController = 'categories/';
+const customersController = 'customers/';
 const colorsController = 'colors/';
 
 
@@ -87,10 +88,10 @@ myapp.controller("menuController", function ($scope, $http, $rootScope) {
 myapp.controller("loginController", function ($rootScope, $window, $http, $scope) {
     if (sessionStorage.getItem('login') != null) {
         var islogin = sessionStorage.getItem('login');
-        var user = JSON.parse(sessionStorage.getItem('khach'));
+        var userName = sessionStorage.getItem('khach');
     }
-    if (islogin == "1") {
-        $rootScope.Status = user.CustomerName;
+    if (islogin != "0") {
+        $rootScope.Status = userName;
     }
     else {
         $rootScope.Status='Login'
@@ -98,61 +99,91 @@ myapp.controller("loginController", function ($rootScope, $window, $http, $scope
     $('#c').click(function () {
         $('.mainn').hide();
     })  
-    $rootScope.close = "";
-    $rootScope.Khach = null;
-    $rootScope.remember = false;
-    $rootScope.userName = "";
+
     
-    $rootScope.Login = function (un, pw, rp) {
-        $http({
-            method: 'get',
-            params: {
-                us: un,
-                pw: pw,
-                rp: rp
-            },
-            url:'/Home/Login'
-        }).then(function (d) {
-            if (d.data.login == "0") {
+    $rootScope.Login = function (email, pw, rp) {
+        var connect_api = function (method,url,callback,status='Thao tác thành công!') { 
+            $http({
+              method: method,
+              url: url,
+            }).then(
+              function (response) {
+                callback(response);
+                if(status!=""){
+                    toastr.success(status);
+                }
+              },
+              (error) => {console.log(error);toastr.error('Lỗi rồi!');}
+            );
+         }
+        var connect_api_data = function (method,url,data,callback) { 
+            $http({
+              method: method,
+              url: url,
+              data: data,
+              'content-Type': 'application/json',
+            }).then(
+              function (response) {
+                callback(response);
+              },
+              (error) => {console.log(error);toastr.error('Loi');}
+            );
+           }
+           
+
+        imformations_customer = {}
+        imformations_customer.email=email;
+        imformations_customer.password=pw;
+
+
+        connect_api_data('post',baseApi+customersController+'get',imformations_customer,(res)=>{
+            if(res.data==0){
+                toastr.error("Mật khẩu hoặc email sai!!");
                 $rootScope.Status = "Login"
             }
-            else {
-                //Get quantity cart
-                $http({
-                    method: 'get',
-                    params: { id: d.data.Khach.CustomerID },
-                    url: '/Cart/GetCartQuantity'
-                }).then(function success(res) {
-                    $rootScope.CartQuantity = parseInt(JSON.parse(res.data));
-                    localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
-                }, function error(e) {
-                    console.log(e);
-                })
-                //Get quantity cart
-                sessionStorage.setItem("login", d.data.login);
-                sessionStorage.setItem("khach", JSON.stringify(d.data.Khach));
-                $rootScope.Status = d.data.Khach.CustomerName
+            else{
+                var customer = res.data;
+                console.log(customer);
+
+                var cart = customer.cart;
+                $rootScope.CartQuantity = parseInt(customer.Quantity);
+                localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
+
+                sessionStorage.setItem("login", customer.id);
+                sessionStorage.setItem("khach", customer.CustomerName);
+                sessionStorage.setItem("cart", JSON.stringify(cart));
+
+                $rootScope.Status = customer.CustomerName;
                 $('.mainn').hide();
                 location.reload();
             }
-        }, function error(e) {
-            sessionStorage.setItem("login", "0");
-            sessionStorage.setItem("khach", "");
-        });
+        })
     }
 
-    $rootScope.LInLout = function () {
-        if ($rootScope.lInOut == "SignIn") {
-            $rootScope.Finout = "#myModal";
-        }
-        else {
-            $rootScope.Finout = "";
-            $rootScope.Logout();
-        }
-    }
+    // $rootScope.LInLout = function () {
+    //     if ($rootScope.lInOut == "SignIn") {
+    //         $rootScope.Finout = "#myModal";
+    //     }
+    //     else {
+    //         $rootScope.Finout = "";
+    //         $rootScope.Logout();
+    //     }
+    // }
 
    $('#login').click(function () {
-       $('.mainn').show();
+       if($rootScope.Status == 'Login'){
+            $('.mainn').show();
+       }
+       else{
+            $rootScope.Status = 'Login';
+            sessionStorage.setItem("login", 0);
+            sessionStorage.setItem("khach", "");
+            $rootScope.CartQuantity = parseInt(0);
+
+            localStorage.setItem('cartQuantity', 0);
+
+            location.reload();
+       }
    })
 
     $('#login1').click(function () {

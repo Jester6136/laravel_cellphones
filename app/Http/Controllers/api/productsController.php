@@ -86,6 +86,7 @@ class productsController extends Controller
                 $old_price = null;
                 $colors = $memory->colors;
                 foreach($colors as $color){
+
                     $new_price = $color->prices->Price;
                     if($color->old_prices != null){
                         $old_price = $color->old_prices->Price;
@@ -97,7 +98,6 @@ class productsController extends Controller
                 }
                 array_push($prices,[$old_price,$new_price]);
             }
-
         return [$product,$prices];
     }
 
@@ -159,8 +159,7 @@ class productsController extends Controller
                 $color->ColorImage = $color_request['ColorImage'];
                 $color->ColorName = $color_request['ColorName'];
                 $color->save();
-
-                $color->addprice($color->id,$color_request['Price'],new DateTime()); 
+                $color->addprice($color->id,$color_request['Price'],new DateTime());
             }
         }
         $product = products::where('IsActive',1)->where('id',$productID)->first();
@@ -178,7 +177,6 @@ class productsController extends Controller
      */
     public function show($productID)
     {
-
         $product = products::where('id',$productID)->first();
         $product->categories;
         $product->brands;

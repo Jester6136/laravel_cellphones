@@ -10,7 +10,7 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
           function (response) {
             callback(response);
           },
-          (error) => {console.log(error);showAlert(errorStatus);}
+          (error) => {console.log(error);toastr.error('Lỗi');}
         );
        }
 
@@ -71,6 +71,7 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
             }
             //Set product memory colors
             $rootScope.Product.Memories[i].Colors = product.memories[i].colors;
+            $rootScope.Product.Memories[i].Colors.sort((a, b) => a.ColorName.localeCompare(b.ColorName))
         }
         $rootScope.Colors = Selected_Memo.Colors
         $rootScope.Product.ProductName = product.ProductName;
@@ -136,36 +137,48 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
     }
     //add to cart
     $scope.addCart = function (SelectedProduct) {
-        connect_api('get',baseApi+cartController,(res)=>{
-            console.log(res.data);
-            
-        })
+
         //If login
-        // if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
+        if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
             //Get object cart
-            $scope.tocart = []
-            var user = JSON.parse(sessionStorage.getItem('khach'));
+            var cart = JSON.parse(sessionStorage.getItem("cart"));
+
+            
             // $scope.tocart.UserID = user.CustomerID
-            $scope.tocart.UserID = 1;
-            $scope.tocart.ColorID = SelectedProduct.ColorID;
-            var newcartJson = ConvertToJsonString($scope.tocart).replace(/\s/g, '');
-            console.log(newcartJson);
             //If have
             if (typeof SelectedProduct.ColorID !== 'undefined') {
-                connect_api_data('post',baseApi+cartController,$scope.tocart,(res)=>{
-                    $rootScope.CartQuantity += 1;
-                    localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
-                    window.location.href = 'cart';
-                    console.log(res);
+                item = {};
+                item.UserID = cart[0].CustomerID;
+                item.ColorID = SelectedProduct.ColorID;  
+                var checkNon_DuplicatedColor = true;
+
+
+                cart.forEach((product)=>{
+                    if(item.ColorID==product.ColorID){
+                        checkNon_DuplicatedColor=false;
+                    }
                 })
+                
+                if(checkNon_DuplicatedColor){
+                    connect_api_data('post',baseApi+cartController,item,(res)=>{
+                        $rootScope.CartQuantity = parseInt($rootScope.CartQuantity) + 1;
+                        localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
+                        window.location.href = 'cart';
+                        console.log(res);
+                    })
+                }
+                else{
+                    toastr.info("Sản phẩm đã có trong giỏ hàng!!");
+                }
+                
             }
             else {
                 toastr.info("Hãy chọn màu");
             }
-        // }
-        // else {
-        //     toastr.info("Hãy đăng nhập");
-        // }
+        }
+        else {
+            toastr.info("Hãy đăng nhập");
+        }
        
     }
 })

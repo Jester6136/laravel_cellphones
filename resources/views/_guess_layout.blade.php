@@ -23,7 +23,7 @@
             <input type="checkbox" checked id="chk" aria-hidden="true">
 
             <div class="signup">
-                <form action="">
+                <form action="" class="ip">
                     <label for="chk" aria-hidden="true">Sign up</label>
                     <input type="text" name="txt" placeholder="User name" required="">
                     <input type="email" name="email" placeholder="Email" required="">
@@ -33,11 +33,11 @@
             </div>
 
             <div class="login">
-                <form action="">
+                <form action="" class="ip">
                     <label for="chk" aria-hidden="true">Login</label>
                     <input type="email" name="email" placeholder="Email" id="mail" ng-model="mail" required="">
                     <input type="password" name="pswd" placeholder="Password" id="pass" ng-model="pass" required="">
-                    <span><input type="checkbox" ng-model="remember" class="input form-control" id="check_remember" /> <p> Remember me</p></span>
+                    <!-- <span><input type="checkbox" ng-model="remember" class="input form-control" id="check_remember" /> <p> Remember me</p></span> -->
                     <button id="login1" ng-click="Login(mail,pass,remember)">Login</button>
                 </form>
             </div>

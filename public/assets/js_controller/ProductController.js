@@ -4,6 +4,7 @@ const baseApi = 'http://localhost:8000/api/';
 const productsController = 'products/';
 const memoriesController = 'memories/';
 const categoriesController = 'categories/';
+const customersController = 'customers/';
 const colorsController = 'colors/';
 const successStatus = 'success';
 const errorStatus = 'error';

@@ -14,41 +14,45 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
           },
           (error) => {console.log(error);toastr.error('Lỗi rồi!');}
         );
-     }
-    
+    }
+    var connect_api_data = function (method,url,data,callback) { 
+        $http({
+          method: method,
+          url: url,
+          data: data,
+          'content-Type': 'application/json',
+        }).then(
+          function (response) {
+            callback(response);
+          },
+          (error) => {console.log(error);toastr.error('Loi');}
+        );
+       }
 
     if (localStorage.getItem("cartQuantity") === null) {
         $rootScope.CartQuantity = 0
     }
     else {
-        $rootScope.CartQuantity = localStorage.getItem('cartQuantity');
+        $rootScope.CartQuantity = parseInt(localStorage.getItem('cartQuantity'));
     }
     $scope.Order = [];
     $scope.Cart = []
     $scope.sumPrice = 0;
     $scope.sumPriceShow = "0";
 
-   
-    // if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
-    //     var user = JSON.parse(sessionStorage.getItem('khach'));
-    //     var UserID = user.CustomerID
-    //     var DeliveryAddress = user.DeliveryAddress;
-    //     var Phone = user.Phone;
-    //     var CustomerName = user.CustomerName;
-    //     $scope.Order.CustomerID = UserID;
-    //     $scope.Order.CustomerName = CustomerName;
-    //     $scope.Order.DeliveryAddress = DeliveryAddress;
-    //     $scope.Order.Phone = Phone;
+    console.log(sessionStorage.getItem('login'));
+    connect_api('get',baseApi+customersController+sessionStorage.getItem('login'),(res)=>{
+        console.log(res);
+    })
 
 
     connect_api('get',baseApi+cartController,(res)=>{
         $scope.Cart = res.data;
-        console.log($scope.Cart );
         for(var i=0;i<$scope.Cart.length;i++){
             var element = $scope.Cart[i];
-            $scope.sumPrice+=element.color.prices.Price*element.Quantity;
-            element.old_prices = numberFormat.format(element.color.old_prices.Price)
-            element.new_price = numberFormat.format(element.color.prices.Price)
+            $scope.sumPrice+=element.new_price*element.Quantity;
+            element.old_price = numberFormat.format(element.old_price)
+            element.new_price = numberFormat.format(element.new_price)
         }
         $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
     })
@@ -58,19 +62,14 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
     // }
 
     $scope.delete = function (obj) {
-        $scope.Cart.splice($scope.Cart.indexOf(obj), 1);
-        $http({
-            method: 'post',
-            url: '/Cart/DeleteCart',
-            params: {cartID : obj.CartID}
-        }).then(function success() {
+        connect_api('delete',baseApi+cartController+obj.id,(res)=>{
+            $scope.Cart.splice($scope.Cart.indexOf(obj), 1);
             toastr.success("Đã xóa sản phẩm khỏi giỏ hàng")
-            $rootScope.CartQuantity -= 1;
+            $rootScope.CartQuantity = parseInt($rootScope.CartQuantity )-1;
             localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
-        }, function error() {
-            toastr.info("Lỗi giỏ hàng");
         })
     }
+
     $scope.sub = function (obj) {
         if (obj.Quantity > 1) {
             obj.Quantity -= 1;
@@ -83,13 +82,36 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
             obj.Quantity += 1;
             $scope.sumPrice += obj.color.prices.Price;
             $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
-            
         }
     }
+
+    $scope.go_payment_info =function (Cart){
+        if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1"){
+            var c = [];
+            Cart.forEach((item)=>{
+                c_item = {};
+                c_item.id = item.id;
+                c_item.ColorID = item.ColorID;
+                c_item.CustomerID = item.CustomerID;
+                c_item.Quantity = item.Quantity;
+                c_item.created_at = item.created_at;
+                c.push(c_item)
+            })
+            
+            connect_api_data('post',baseApi+cartController+'update_carts',c,(res)=>{
+                sessionStorage.setItem("cart", JSON.stringify(c));
+                window.location.href = 'payment_info';
+            })
+        }
+        else{
+            toastr.info('Bạn cần đăng nhập');
+        }
+    }
+
+
     $scope.addOrder = function () {
         $scope.Order.Amount = $scope.sumPrice;
         $scope.Order.OrderDetail = $scope.Cart
-        console.log($scope.Order);
         $http({
             method: 'post',
             params: { json: ConvertToJsonString($scope.Order) },
@@ -108,6 +130,40 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
         })
     }
 
+    $.getJSON("assets_guess/Javascript/cities.json", function(json) {
+        $scope.citis = json
+    });
+    
+    $.getJSON("assets_guess/Javascript/districts.json", function(json) {
+        $scope.districts = json
+    });
+
+    $.getJSON("assets_guess/Javascript/wards.json", function(json) {
+        $scope.wards = json
+    });
+
+    $scope.city_change =function(city){
+        $scope.districts_change = $scope.districts.filter(record => record.parent_code == city.code)
+    }
+
+    $scope.district_change =function(district){
+        $scope.wards_change = $scope.wards.filter(record => record.parent_code == district.code)
+    }
+
+    $scope.go_voucher = function(){
+        if($scope.ward == null){
+            toastr.info("Hãy chọn xã");
+        }
+        else{
+            if (typeof $scope.Address_detail !== 'undefined'){
+                $scope.Order.Address = $scope.ward.path + $scope.Address_detail;
+            }
+            else{
+                $scope.Order.Address = $scope.ward.path;
+            }
+        }
+        
+    }
 })
 
 const numberFormat = new Intl.NumberFormat('vi-VN', {
