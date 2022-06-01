@@ -20,6 +20,17 @@ class colorsController extends Controller
         //
     }
 
+    public function get_basic()
+    {
+       $colors = colors::where('is_active',1)->get();
+       foreach($colors as $color){
+           $memory =  $color->memory;
+           $product = $memory->product;
+           $color->ColorName = $product->ProductName . " | " . $memory->MemoryName . " | " . $color->ColorName;
+           unset($color->memory);
+       }
+       return $colors;
+    }
     /**
      * Show the form for creating a new resource.
      *

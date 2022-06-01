@@ -1,4 +1,4 @@
-﻿const cartController = "cart/";
+﻿
 myapp.controller('cartController', function ($http, $scope, $rootScope) {
 
     var connect_api = function (method,url,callback,status='Thao tác thành công!') { 
@@ -29,24 +29,27 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
         );
        }
 
-    if (localStorage.getItem("cartQuantity") === null) {
+    if (sessionStorage.getItem("cartQuantity") === null) {
         $rootScope.CartQuantity = 0
     }
     else {
-        $rootScope.CartQuantity = parseInt(localStorage.getItem('cartQuantity'));
+        $rootScope.CartQuantity = parseInt(sessionStorage.getItem('cartQuantity'));
     }
-    $scope.Order = [];
+    
+    // $rootScope.Order={};
     $scope.Cart = []
     $scope.sumPrice = 0;
     $scope.sumPriceShow = "0";
+    // connect_api('get',baseApi+customersController+sessionStorage.getItem('login'),(res)=>{
+    //     $scope.Order.CustomerName = res.data.CustomerName;
+    //     $scope.Order.Phone = res.data.Phone;
+    //     $scope.Order.Email = res.data.Email;
+    //     $scope.Order.Address = "";
+    //     $scope.Order.More = "";
+    // },"")
+    
 
-    console.log(sessionStorage.getItem('login'));
-    connect_api('get',baseApi+customersController+sessionStorage.getItem('login'),(res)=>{
-        console.log(res);
-    })
-
-
-    connect_api('get',baseApi+cartController,(res)=>{
+    connect_api('get',baseApi+cartController+sessionStorage.getItem('login'),(res)=>{
         $scope.Cart = res.data;
         for(var i=0;i<$scope.Cart.length;i++){
             var element = $scope.Cart[i];
@@ -55,7 +58,7 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
             element.new_price = numberFormat.format(element.new_price)
         }
         $scope.sumPriceShow = numberFormat.format($scope.sumPrice);
-    })
+    },"")
     // }
     // else {
     //     toastr.info("Hãy đăng nhập để xem giỏ hàng của bạn");
@@ -64,10 +67,9 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
     $scope.delete = function (obj) {
         connect_api('delete',baseApi+cartController+obj.id,(res)=>{
             $scope.Cart.splice($scope.Cart.indexOf(obj), 1);
-            toastr.success("Đã xóa sản phẩm khỏi giỏ hàng")
             $rootScope.CartQuantity = parseInt($rootScope.CartQuantity )-1;
-            localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
-        })
+            sessionStorage.setItem('cartQuantity', $rootScope.CartQuantity);
+        },"Đã xóa sản phẩm khỏi giỏ hàng")  
     }
 
     $scope.sub = function (obj) {
@@ -109,67 +111,78 @@ myapp.controller('cartController', function ($http, $scope, $rootScope) {
     }
 
 
-    $scope.addOrder = function () {
-        $scope.Order.Amount = $scope.sumPrice;
-        $scope.Order.OrderDetail = $scope.Cart
-        $http({
-            method: 'post',
-            params: { json: ConvertToJsonString($scope.Order) },
-            url: '/Order/InsertOrder'
-        }).then(function success(res) {
-            toastr.success("Đặt hàng thành công");
-            //Reset Cart
-            $scope.Cart = []
-            $scope.sumPrice = 0;
-            $scope.sumPriceShow = numberFormat.format("0");
-            $rootScope.CartQuantity = 0;
-            localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
-            localStorage.setItem('cartQuantity',0);
-        }, function error(res) {
-            console.log(res);
-        })
-    }
+    // $scope.addOrder = function () {
+    //     $rootScope.Order.Amount = $scope.sumPrice;
+    //     $rootScope.Order.OrderDetail = $scope.Cart
+    //     $http({
+    //         method: 'post',
+    //         params: { json: ConvertToJsonString($rootScope.Order) },
+    //         url: '/Order/InsertOrder'
+    //     }).then(function success(res) {
+    //         toastr.success("Đặt hàng thành công");
+    //         //Reset Cart
+    //         $scope.Cart = []
+    //         $scope.sumPrice = 0;
+    //         $scope.sumPriceShow = numberFormat.format("0");
+    //         $rootScope.CartQuantity = 0;
+    //         sessionStorage.setItem('cartQuantity', $rootScope.CartQuantity);
+    //         sessionStorage.setItem('cartQuantity',0);
+    //     }, function error(res) {
+    //         console.log(res);
+    //     })
+    // }
 
-    $.getJSON("assets_guess/Javascript/cities.json", function(json) {
-        $scope.citis = json
-    });
+    // $.getJSON("assets_guess/Javascript/cities.json", function(json) {
+    //     $scope.citis = json
+    // });
     
-    $.getJSON("assets_guess/Javascript/districts.json", function(json) {
-        $scope.districts = json
-    });
+    // $.getJSON("assets_guess/Javascript/districts.json", function(json) {
+    //     $scope.districts = json
+    // });
 
-    $.getJSON("assets_guess/Javascript/wards.json", function(json) {
-        $scope.wards = json
-    });
+    // $.getJSON("assets_guess/Javascript/wards.json", function(json) {
+    //     $scope.wards = json
+    // });
 
-    $scope.city_change =function(city){
-        $scope.districts_change = $scope.districts.filter(record => record.parent_code == city.code)
+    // $scope.city_change =function(city){
+    //     $scope.districts_change = $scope.districts.filter(record => record.parent_code == city.code)
+    // }
+
+    // $scope.district_change =function(district){
+    //     $scope.wards_change = $scope.wards.filter(record => record.parent_code == district.code)
+    // }
+    $scope.apply_voucher = function (){
+        console.log($rootScope.Order);
     }
 
-    $scope.district_change =function(district){
-        $scope.wards_change = $scope.wards.filter(record => record.parent_code == district.code)
-    }
-
-    $scope.go_voucher = function(){
-        if($scope.ward == null){
-            toastr.info("Hãy chọn xã");
-        }
-        else{
-            if (typeof $scope.Address_detail !== 'undefined'){
-                $scope.Order.Address = $scope.ward.path + $scope.Address_detail;
-            }
-            else{
-                $scope.Order.Address = $scope.ward.path;
-            }
-        }
+    // $scope.go_voucher = function(){
+    //     if (sessionStorage.getItem('login') != null) {
+    //         if($scope.ward == null){
+    //             toastr.info("Hãy chọn xã");
+    //         }
+    //         else{
+    //             if (typeof $scope.Address_detail !== 'undefined'){
+    //                 $rootScope.Order.Address = $scope.ward.path +", "+ $scope.Address_detail;
+    //             }
+    //             else{
+    //                 $rootScope.Order.Address = $scope.ward.path;
+    //             }
+    
+    //             $rootScope.Order.CustomerID = sessionStorage.getItem('login');
+                
+    //             connect_api_data('post',baseApi+ordersController,$rootScope.Order,(res)=>{
+    //                 sessionStorage.setItem('order',JSON.stringify($rootScope.Order))
+    //                 window.location.href = 'voucher';
+    //             })
+    //         }
+    //     }
+    //     else{
+    //         toastr.info("Hãy đăng nhập");
+    //     }
         
-    }
+    // }
 })
 
-const numberFormat = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-});
 
 function ConvertToJsonString(obj) {
     var CustomerID = obj.CustomerID;

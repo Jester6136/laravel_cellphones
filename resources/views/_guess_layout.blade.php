@@ -94,6 +94,9 @@
     <script src="/assets/js_controller/angular_path/dirPagination.js"></script>
     <script>
         var myapp = angular.module('MyApp', ['angularUtils.directives.dirPagination']);//khai baso module
+        myapp.config(function(paginationTemplateProvider) {
+  paginationTemplateProvider.setPath('/assets_guess/customTemplate.html');
+});
     </script>
     <script src="/assets/vendor/toast/toastr.min.js"></script>
     <script src="/assets_guess/Javascript/main.js"></script>

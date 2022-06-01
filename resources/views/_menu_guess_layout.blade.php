@@ -14,7 +14,7 @@
                                         <i class="fas fa-angle-right"></i>  
                                     </a>
                                     <ul>
-                                        <a href="/Products/ProductsBrand" ng-click="PushBrand(brand.CategoryID,brand.BrandID)" style="width: 100%;" 
+                                        <a href="/brand/@{{brand.id}}" ng-click="PushBrand(brand.CategoryID,brand.BrandID)" style="width: 100%;" 
                                         ng-repeat="brand in item.brands" value="@{{brand.id}}">
                                             <li style="width:100%;">@{{brand.BrandName}}</li></a>
                                     </ul>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 <div class="logo">
-                    <a href="/Home/Index">
+                    <a href="/">
                         <img src="/assets/images/logo.PNG" alt="">
                     </a>
                 </div>
@@ -50,14 +50,14 @@
                 <button onclick="findProduct()"><i class="fas fa-search"></i></button>
             </div>
             <div class="box-about" ng-controller="loginController">
-                <a href="">
+                <a href="/ordercheck">
                     <div class="box-about-1">
                         <div class="box-about-icon">
-                            <i class="fas fa-phone-alt"></i>
+                        <i class="fas fa-shipping-fast"></i>
                         </div>
                         <div class="box-about-context">
-                            <p>Mua hàng:</p>
-                            <p><b>1800.2097</b></p>
+                            <p>Kiểm tra</p>
+                            <p>Đơn hàng</p>
                         </div>
                     </div>
                 </a>

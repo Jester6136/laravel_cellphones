@@ -1,5 +1,4 @@
-﻿const cartController = "cart/";
-myapp.controller('ProductDetailController', function ($http, $scope, $rootScope) {
+﻿myapp.controller('ProductDetailController', function ($http, $scope, $rootScope) {
     var connect_api_data = function (method,url,data,callback) { 
         $http({
           method: method,
@@ -139,7 +138,7 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
     $scope.addCart = function (SelectedProduct) {
 
         //If login
-        if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') == "1") {
+        if (sessionStorage.getItem('login') != null && sessionStorage.getItem('login') != "0") {
             //Get object cart
             var cart = JSON.parse(sessionStorage.getItem("cart"));
 
@@ -148,11 +147,10 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
             //If have
             if (typeof SelectedProduct.ColorID !== 'undefined') {
                 item = {};
-                item.UserID = cart[0].CustomerID;
+                //get login
+                item.UserID = sessionStorage.getItem("login");
                 item.ColorID = SelectedProduct.ColorID;  
                 var checkNon_DuplicatedColor = true;
-
-
                 cart.forEach((product)=>{
                     if(item.ColorID==product.ColorID){
                         checkNon_DuplicatedColor=false;
@@ -162,7 +160,7 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
                 if(checkNon_DuplicatedColor){
                     connect_api_data('post',baseApi+cartController,item,(res)=>{
                         $rootScope.CartQuantity = parseInt($rootScope.CartQuantity) + 1;
-                        localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
+                        sessionStorage.setItem('cartQuantity', $rootScope.CartQuantity);
                         window.location.href = 'cart';
                         console.log(res);
                     })
@@ -182,10 +180,6 @@ myapp.controller('ProductDetailController', function ($http, $scope, $rootScope)
        
     }
 })
-const numberFormat = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-});
 var ConvertToJsonString = function (Object) {
     var UserID = Object.UserID
     var ColorID = Object.ColorID;

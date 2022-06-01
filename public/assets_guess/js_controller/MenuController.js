@@ -1,10 +1,54 @@
 ﻿const baseApi = 'http://localhost:8000/api/';
 const productsController = 'products/';
 const memoriesController = 'memories/';
+const ordersController = 'orders/';
 const categoriesController = 'categories/';
 const customersController = 'customers/';
 const colorsController = 'colors/';
+const cartController = "cart/";
 
+const OrderStatus = [
+    {
+        "id":"1",
+        "name":"Chờ xác nhận"
+    },
+    {
+        "id":"2",
+        "name":"Đã xác nhận"
+    },
+    {
+        "id":"3",
+        "name":"Đang lấy hàng"
+    },
+    {
+        "id":"4",
+        "name":"Đã lấy hàng"
+    },
+    {
+        "id":"5",
+        "name":"Đã thanh toán"
+    },
+    {
+        "id":"6",
+        "name":"Đã hủy"
+    }
+];
+
+const OrderType=[
+    {
+        "id":"1",
+        "name":"Thanh toán khi nhận hàng"
+    },
+    {
+        "id":"2",
+        "name":"Thanh toán online"
+    },
+]
+
+const numberFormat = new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+});
 
 myapp.controller("menuController", function ($scope, $http, $rootScope) {
     var connect_api = function (method,url,callback,status='Thao tác thành công!') { 
@@ -23,11 +67,11 @@ myapp.controller("menuController", function ($scope, $http, $rootScope) {
      }
 
 
-    if (localStorage.getItem("cartQuantity") === null) {
+    if (sessionStorage.getItem("cartQuantity") === null) {
         $rootScope.CartQuantity = 0
     }
     else {
-        $rootScope.CartQuantity = localStorage.getItem('cartQuantity');
+        $rootScope.CartQuantity = sessionStorage.getItem('cartQuantity');
     }
 
     connect_api('get',baseApi+categoriesController,(res)=>{
@@ -89,13 +133,18 @@ myapp.controller("loginController", function ($rootScope, $window, $http, $scope
     if (sessionStorage.getItem('login') != null) {
         var islogin = sessionStorage.getItem('login');
         var userName = sessionStorage.getItem('khach');
+            
+        if (islogin != "0") {
+            $rootScope.Status = userName;
+        }
+        else {
+            $rootScope.Status='Login'
+        }
     }
-    if (islogin != "0") {
-        $rootScope.Status = userName;
-    }
-    else {
+    else{
         $rootScope.Status='Login'
     }
+
     $('#c').click(function () {
         $('.mainn').hide();
     })  
@@ -147,7 +196,7 @@ myapp.controller("loginController", function ($rootScope, $window, $http, $scope
 
                 var cart = customer.cart;
                 $rootScope.CartQuantity = parseInt(customer.Quantity);
-                localStorage.setItem('cartQuantity', $rootScope.CartQuantity);
+                sessionStorage.setItem('cartQuantity', $rootScope.CartQuantity);
 
                 sessionStorage.setItem("login", customer.id);
                 sessionStorage.setItem("khach", customer.CustomerName);
@@ -180,7 +229,7 @@ myapp.controller("loginController", function ($rootScope, $window, $http, $scope
             sessionStorage.setItem("khach", "");
             $rootScope.CartQuantity = parseInt(0);
 
-            localStorage.setItem('cartQuantity', 0);
+            sessionStorage.setItem('cartQuantity', 0);
 
             location.reload();
        }

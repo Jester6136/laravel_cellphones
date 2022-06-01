@@ -1,7 +1,7 @@
 @extends('_guess_layout')
 @section('content')
 
-<div class="shopping-cart" ng-controller="cartController">
+<div class="shopping-cart" ng-controller="Payment_infoController">
     <div class="container-cart">
         <div class="cart-top">
             <a href="/cart" class="buymore">
@@ -57,7 +57,7 @@
                 
                 <div class="sum-price">
                     <div id="sum-price">
-                        <p>- Tổng tiền tạm tính: <span>@{{sumPriceShow}}</span></p>
+                        <p>- Tổng tiền tạm tính: <span>@{{Order.sumPriceShow}}</span></p>
                     </div>
                     <div id="line"></div>
                 </div>
@@ -78,5 +78,5 @@
 @stop
 
 @section('js')
-    <script src="/assets_guess/js_controller/CartController.js"></script>
+    <script src="/assets_guess/js_controller/Payment_infoController.js"></script>
 @stop

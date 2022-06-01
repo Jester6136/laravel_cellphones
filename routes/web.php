@@ -21,6 +21,10 @@ Route::get('/admin/products', function () {
     return view('admin_page.products');
 });
 
+Route::get('/admin/invoices', function () {
+    return view('admin_page.invoices');
+});
+
 Route::get('/productdetail', function () {
     return view('guess_page.productdetail');
 });
@@ -39,4 +43,10 @@ Route::get('/payment', function () {
 });
 Route::get('/cart-success', function () {
     return view('guess_page.cart-success');
+});
+Route::get('/ordercheck', function () {
+    return view('guess_page.ordercheck');
+});
+Route::get('/brand/{id}', function () {
+    return view('guess_page.brand');
 });

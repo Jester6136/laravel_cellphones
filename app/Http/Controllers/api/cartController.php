@@ -64,9 +64,24 @@ class cartController extends Controller
      * @param  \App\Models\cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function show(cart $cart)
+    public function show($id)
     {
-        //
+        $cart = cart::where('CustomerID',$id)->get();
+        foreach($cart as $item){
+            $color = $item->color;
+            $new_price = $color->prices;
+            $old_price = $color->old_prices;
+            $item->new_price =$new_price->Price;
+            if($old_price==null){
+                $item->old_price =$new_price->Price;
+            }
+            else{
+                $item->old_price =$old_price->Price;
+            }
+            $memory = $color->memory;
+            $memory->product;
+        }
+        return $cart;
     }
 
     /**
@@ -110,8 +125,8 @@ class cartController extends Controller
      * @param  \App\Models\cart  $cart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(cart $cart)
+    public function destroy($id)
     {
-        //
+        cart::findOrFail($id)->delete();
     }
 }

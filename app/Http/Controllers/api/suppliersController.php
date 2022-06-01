@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\customers;
+use App\Models\suppliers;
 use Illuminate\Http\Request;
 
-class customersController extends Controller
+class suppliersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +15,7 @@ class customersController extends Controller
      */
     public function index()
     {
-        // 
+        return ["suppliers"=>suppliers::where('is_active',1)->get()];
     }
 
     /**
@@ -42,41 +42,21 @@ class customersController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\customers  $customers
+     * @param  \App\Models\suppliers  $suppliers
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(suppliers $suppliers)
     {
-        return customers::find($id);
+        //
     }
 
-    // public function show_cus($email,$password)
-    // {
-    //     return customers::where("Email",$email)->where("Password",$password)->first();
-    // }
-
-    public function show_cus(Request $customer)
-    {
-        $customer = customers::where("Email",$customer->email)->where("Password",$customer->password)->first();
-        $carts = $customer->cart;
-        if($carts == null){
-            return 0;
-        }
-        $quantity = 0;
-        foreach($carts as $cart){
-            $quantity++;
-        }
-       
-        $customer->Quantity = $quantity;
-        return $customer;
-    }
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\customers  $customers
+     * @param  \App\Models\suppliers  $suppliers
      * @return \Illuminate\Http\Response
      */
-    public function edit(customers $customers)
+    public function edit(suppliers $suppliers)
     {
         //
     }
@@ -85,10 +65,10 @@ class customersController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\customers  $customers
+     * @param  \App\Models\suppliers  $suppliers
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, customers $customers)
+    public function update(Request $request, suppliers $suppliers)
     {
         //
     }
@@ -96,10 +76,10 @@ class customersController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\customers  $customers
+     * @param  \App\Models\suppliers  $suppliers
      * @return \Illuminate\Http\Response
      */
-    public function destroy(customers $customers)
+    public function destroy(suppliers $suppliers)
     {
         //
     }

@@ -8,17 +8,18 @@
         <div class="toggle-content col-3 col-m-5">
             <div class="row">
                 <ul>
-                    <li ng-repeat="item in categories">
-                        <a href="" ng-click="PushCategory(brand.CategoryID)" value="@{{item.categoryID}}">
-                            <i class="@{{item.Icon}}"></i>
-                            @{{item.CategoryName}}
-                            <i class="fas fa-angle-right"></i>
-                        </a>
-                        <ul>
-                            <a href="/Products/ProductsBrand" ng-click="PushBrand(brand.CategoryID,brand.BrandID)" style="width: 100%;" ng-repeat="brand in item.brands" value="@{{brand.BrandID}}">
-                            <li style="width:100%;">@{{brand.BrandName}}</li></a>
-                        </ul>
-                    </li>
+                <li ng-repeat="item in categories">
+                                    <a href="" ng-click="PushCategory(brand.CategoryID)" value="@{{item.id}}">
+                                        <i class="@{{item.Icon}}"></i>
+                                        @{{item.CategoryName}}
+                                        <i class="fas fa-angle-right"></i>  
+                                    </a>
+                                    <ul>
+                                        <a href="/brand/@{{brand.id}}" ng-click="PushBrand(brand.CategoryID,brand.BrandID)" style="width: 100%;" 
+                                        ng-repeat="brand in item.brands" value="@{{brand.id}}">
+                                            <li style="width:100%;">@{{brand.BrandName}}</li></a>
+                                    </ul>
+                                </li>
                     <li>
                         <a href="">
                             <i class="fal fa-newspaper"></i>
@@ -137,14 +138,6 @@
                     <div class="offers">
                         <p>@{{Product.PromotionName}}</p>
                     </div>
-                    <div class="rating">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <p>1 đánh giá</p>
-                    </div>  
                     <div class="product-btn">
                         <a href=""><button class="buy-btn" ng-click="getProduct(Product)">Mua ngay</button></a>
                         <a href=""><button class="compare">So sánh</button></a>

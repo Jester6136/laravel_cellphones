@@ -9,6 +9,9 @@ use App\Http\Controllers\api\customersController;
 use App\Http\Controllers\api\memoriesController;
 use App\Http\Controllers\api\colorsController;
 use App\Http\Controllers\api\cartController;
+use App\Http\Controllers\api\ordersController;
+use App\Http\Controllers\api\invoicesController;
+use App\Http\Controllers\api\suppliersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +30,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::resource('products', productsController::class);
+Route::resource('orders', ordersController::class);
+Route::resource('invoices', invoicesController::class);
+Route::resource('suppliers', suppliersController::class);
 Route::resource('cart', cartController::class);
 
 Route::resource('memories', memoriesController::class);
+Route::resource('customers', customersController::class);
 Route::resource('colors', colorsController::class);
 
 Route::resource('categories', categoriesController::class);
@@ -39,6 +46,7 @@ Route::post('products/upload', [productsController::class, 'uploadFile'])->name(
 
 Route::get('memories/getcolordetails/{memoryID}', [memoriesController::class, 'getcolordetails'])->name('get.getcolordetail');
 
+Route::get('color/get_basic', [colorsController::class, 'get_basic'])->name('color.get_basic');
 
 
 
@@ -47,7 +55,12 @@ Route::get('memories/getcolordetails/{memoryID}', [memoriesController::class, 'g
 Route::post('customers/get', [customersController::class, 'show_cus'])->name('get.show_cus');
 Route::post('cart/update_carts', [cartController::class, 'update_carts'])->name('put.update_carts');
 // Route::get('customers/get', [customersController::class, 'show_cus'])->name('get.show_cus');
+Route::get('orders/showByCusID/{id}',[ordersController::class, 'showByCusID']);
+
+Route::get('orders/checkOrder/{phone}/{orderid}',[ordersController::class, 'checkOrder']);
+Route::post('orders/editStatus/{id}',[ordersController::class, 'editStatus']);
 
 Route::get('products/get15procduct/{categoryID}', [productsController::class, 'get15procduct'])->name('get.get15products');
+Route::get('products/getprocductbybrand/{brandID}', [productsController::class, 'getprocductbybrand'])->name('get.getprocductbybrand');
 Route::get('products/getprocductdetail/{productID}', [productsController::class, 'getProductDetails'])->name('get.getprocductdetail');
 //GUESSEND============================================

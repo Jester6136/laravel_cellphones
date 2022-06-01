@@ -74,6 +74,7 @@ class productsController extends Controller
         return $products;
     }
 
+
     public function getProductDetails($productID){
         $product = products::where('IsActive',1)->where('id',$productID)->first();
         $prices = [];
@@ -121,6 +122,54 @@ class productsController extends Controller
         //
     }
 
+
+
+    public function getprocductbybrand($brandID)
+    {
+        $products = products::where('IsActive',1)->where('brandID',$brandID)->take(15)->orderBy('ReleaseDate','DESC')->get();
+        foreach($products as $product){
+            $product_id = $product->id;
+            $product_name = $product->ProductName;
+            $product_image = $product->image;
+
+            $product->categories;
+            $product->brands;
+
+            $memories = $product->memories;
+            foreach($memories as $memory){
+                $memory->product_id = $product_id;
+                $memory->ProductName = $product_name . " | " . $memory->MemoryName;
+                $memory->image = $product_image;
+
+                $min_price = 1000000000000000;
+                $old_price = 0;
+                $colors = $memory->colors;
+                $image_product = "";
+                foreach($colors as $color){
+                    if($image_product==""){
+                        $image_product = $color->ColorImage;
+                    }
+                    $price_new = $color->prices;
+                    if($min_price>$price_new->Price){
+                        $min_price = $price_new->Price;
+                    }
+                    $price_old = $color->old_prices;
+                    if($color->old_prices != null){
+                        if($old_price<$price_old->Price){
+                            $old_price = $price_old->Price;
+                        }
+                    }
+                    else
+                        $old_price = $min_price;
+                }
+                $memory->image_product = $image_product;
+                $memory->min_price = $min_price;
+                $memory->old_price = $old_price;
+            }
+        }
+
+        return $products;
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -49,10 +49,9 @@
                         </div>
                         
                     </div>
-                    <img src="/assets/images/400x100_COVID1.png" class="small-banner" alt="">
                 </div>
                 <div class="col-7 col-m-11">
-                    <div class="pos-buy">
+                    <!-- <div class="pos-buy">
                         <h5>Mua hàng từ: </h5>
                         <div class="custom-select-wrapper">
                             <div class="custom-select">
@@ -67,7 +66,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
                     <div>
                         <div class="price">
                             <p class="special-price">@{{NewPrice}}</p>
@@ -87,10 +86,11 @@
                             <p class="special-price">@{{color.prices.Price}}</p>
                         </div>
                     </div>
-                    <div class="product-try">
+                    <img src="/assets/images/400x100_COVID1.png" class="small-banner" alt="">
+                    <!-- <div class="product-try">
                         <a href=""><h5>Danh sách cửa hàng có máy trải nghiệm iPhone 12</h5></a>
-                    </div>
-                    <div class="promotion">
+                    </div> -->
+                    <!-- <div class="promotion">
                         <h4>Khuyến mãi</h4>
                         <p>Khuyến mãi hãng:</p>
                         <ul>
@@ -99,7 +99,7 @@
                             <a href="">
                             <li>[HOT] Thu cũ lên đời giá cao - Thủ tục nhanh - Trợ giá lên tới 500.000đ</li></a>
                         </ul>
-                    </div>
+                    </div> -->
                     <p style="margin: 8px 0px;font-size: 12px;">*Giảm thêm tới 1% cho <a href="" style="color: #e0052b;">thành viên Smember</a></p>
                     <p style="margin: 8px 0px;font-size: 12px;">*<a href="" style="color: #e0052b;">Thu cũ đổi mới -&nbsp;&nbsp;Trợ giá tốt nhất</a></p>
                     <div class="order-online buynow">
@@ -124,10 +124,10 @@
                     </div>
                 </div>
                 <div class="col-6 col-m-20 pre-detail">
-                    <div class="box">
+                    <!-- <div class="box">
                         <h4 style="text-transform: uppercase;">HIỆN <span>12</span> CỬA HÀNG CÓ SẴN SẢN PHẨM</h4>
-                    </div>
-                    <img src="~/assets/images/banner1.png" class="small-banner full_width" alt="">
+                    </div> -->
+                    <img src="/assets/images/banner1.png" class="small-banner full_width" alt="">
                     <h5>Tình trạng</h5>
                     <p>
                         Máy mới 100% , chính hãng Apple Việt Nam.
@@ -141,8 +141,8 @@
             </div>
         </div>
         <div style="clear: both;"></div>
-        <div class="line"></div>
-        <div class="full-detail col-14 col-m-20 col-s-20">
+        <div class="line" style="margin-top: 20px;"></div>
+        <div class="full-detail col-20 col-m-20 col-s-20">
             <h4>Điện thoại iPhone 12 Pro Max: Nâng tầm đẳng cấp sử dụng</h4>
             <p>Cứ mỗi năm, đến dạo cuối tháng 8 và gần đầu tháng 9 thì mọi thông tin sôi sục mới về chiếc iPhone mới lại xuất hiện. Apple năm nay lại ra thêm một chiếc iPhone mới với tên gọi mới là iPhone 12 Pro Max, đây là một dòng điện thoại mới và mạnh mẽ nhất của nhà Apple năm nay. Mời bạn tham khảo thêm một số mô tả sản phẩm bên dưới để bạn có thể ra quyết định mua sắm.</p>
             <h4>Màn hình 6.7 inches Super Retina XDR</h4>
@@ -180,95 +180,6 @@
             </span>
             <div style="width: 100%;text-align: center;margin-bottom: 10px;">
                 <button onclick="myFunction()" id="myBtn">Read more</button>
-            </div>
-        </div>
-        <div class="pre-detail2 col-5 col-m-0 col-s-0" style="float: right;">
-            <div class="tittle"><h3>Thông số kỹ thuật</h3></div>
-            <div class="info">
-                <span id="info-name">
-                    Kích thước màn hình
-                </span>
-                <p id="info-detail">6.7 inches</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Công nghệ màn hình
-                </span>
-                <p id="info-detail">OLED</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Camera sau
-                </span>
-                <p id="info-detail">
-                    12 MP, f/1.6, 26mm (wide), 1.4µm, dual pixel PDAF, OIS
-                    12 MP, f/2.0, 52mm (telephoto), 1/3.4", 1.0µm, PDAF, OIS, 2x optical zoom
-                    12 MP, f/2.4, 120˚, 13mm (ultrawide), 1/3.6"
-                    TOF 3D LiDAR scanner (depth)
-                </p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Camera trước
-                </span>
-                <p id="info-detail">
-                    12 MP, f/2.2, 23mm (wide), 1/3.6"
-                    SL 3D, (depth/biometrics sensor)
-                </p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Chipset
-                </span>
-                <p id="info-detail">Apple A14 Bionic (5 nm)</p>
-            </div>
-
-            <div class="info">
-                <span id="info-name">
-                    Bộ nhớ trong
-                </span>
-                <p id="info-detail">128GB</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Pin
-                </span>
-                <p id="info-detail">Li-Ion, sạc nhanh 20W, sạc không dây 15W, USB Power Delivery 2.0</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Thẻ SIM
-                </span>
-                <p id="info-detail">2 SIM (nano‑SIM và eSIM)</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Hệ điều hành
-                </span>
-                <p id="info-detail">iOS 14.1 hoặc cao hơn (Tùy vào phiên bản phát hành)</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Độ phân giải màn hình
-                </span>
-                <p id="info-detail">1284 x 2778 pixels</p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Tính năng màn hình
-                </span>
-                <p id="info-detail">
-                    HDR10
-                    Dolby Vision
-                    True-tone
-                    Độ sáng 800 nits
-                </p>
-            </div>
-            <div class="info">
-                <span id="info-name">
-                    Thẻ SIM
-                </span>
-                <p id="info-detail">2 SIM (nano‑SIM và eSIM)</p>
             </div>
         </div>
     </div>

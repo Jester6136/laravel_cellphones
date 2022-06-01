@@ -60,8 +60,3 @@ myapp.controller('homeController', function ($http, $scope, $rootScope) {
     // })
 
 })
-
-const numberFormat = new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-});

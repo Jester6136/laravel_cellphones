@@ -1,6 +1,4 @@
-﻿var myapp = angular.module('Myapp', ['angularUtils.directives.dirPagination','ckeditor']);//khai baso module
-
-const baseApi = 'http://localhost:8000/api/';
+﻿const baseApi = 'http://localhost:8000/api/';
 const productsController = 'products/';
 const memoriesController = 'memories/';
 const categoriesController = 'categories/';
@@ -99,9 +97,10 @@ myapp.controller("productsController", function ($http, $scope, $rootScope, Prod
         );
      }
 
-     $scope.currentPage = 1;
+    $scope.currentPage = 1;
     $scope.pageSize = 10;
     $scope.q = "";
+
     $rootScope.text = {
         textInput : '',
         options: {

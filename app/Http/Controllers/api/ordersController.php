@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\colors;
+use App\Models\orderdetails;
+use App\Models\cart;
 use App\Models\orders;
+use App\Models\prices;
 use Illuminate\Http\Request;
 
 class ordersController extends Controller
@@ -36,7 +40,35 @@ class ordersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $order = new orders();
+        $order->CustomerID = (int)$request->CustomerID;
+        $order->DeliveryAddress = $request->Address;
+        $order->Phone = $request->Phone;
+        $order->Email = $request->Email;
+        $order->Amount = $request->Amount;
+        $order->is_active = 1;
+        $order->Status = 1;
+        $order->Description = $request->More;
+        $order->save();
+
+        $orderID = $order->id;
+        $orderDetails = $request['OrderDetail'];
+        foreach($orderDetails as $orderdetail){
+            $db_orderdetail = new orderdetails();
+            $db_orderdetail->OrderID = $orderID;
+            $price = prices::where('colorID',$orderdetail['ColorID'])->where('EndDate',null)->first();
+            $db_orderdetail->ColorID = (int)$orderdetail['ColorID'];
+            $db_orderdetail->single_price = $price['Price'];
+            $db_orderdetail->Quantity = (int)$orderdetail['Quantity'];
+
+            $color = colors::find($db_orderdetail->ColorID);
+            $color->Quantity = $color->Quantity - $db_orderdetail->Quantity;
+            $color->save();
+            $db_orderdetail->save();
+        }
+
+        cart::where('CustomerID',$order->CustomerID)->delete();
+        return "success";
     }
 
     /**
@@ -50,15 +82,47 @@ class ordersController extends Controller
         //
     }
 
+    public function showByCusID($id)
+    {
+        $order= orders::where('is_active',1)->where('CustomerID',$id)->orderBy('created_at','desc')->first();
+        $order->customer;
+        $orderdetails = $order->orderdetails;
+        foreach($orderdetails as $orderdetail){
+            $color = $orderdetail->color;
+            $color->old_prices;
+            $memory = $color->memory;
+            $memory->product;
+        }
+        return $order;
+    }
+
+    public function checkOrder($phone,$orderid)
+    {
+        $order= orders::where('is_active',1)->where('Phone',$phone)->where('id',$orderid)->first();
+        if($order == null){
+            return null;
+        }
+        $order->customer;
+        $orderdetails = $order->orderdetails;
+        foreach($orderdetails as $orderdetail){
+            $color = $orderdetail->color;
+            $color->old_prices;
+            $memory = $color->memory;
+            $memory->product;
+        }
+        return $order;
+    }
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function edit(orders $orders)
+    public function editStatus($id)
     {
-        //
+        $db = orders::find($id);
+        $db->Status = 6;
+        $db->save();
     }
 
     /**
