@@ -18,6 +18,7 @@
 
     <!-- Mobile Metas -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" href="https://cdn.cellphones.com.vn/media/favicon/default/logo-cps.png">
 
     <!-- Web Fonts  -->
     <!-- Vendor CSS -->
@@ -233,13 +234,13 @@
 
                 <span class="separator"></span>
 
-                <!-- <div id="userbox" class="userbox" ng-controller="menu">
+                <div id="userbox" class="userbox" ng-controller="menu">
                     <a href="#" data-toggle="dropdown">
                         <figure class="profile-picture">
-                            <img src="/assets/images/!logged-user.jpg" alt="Joseph Doe" class="img-circle" data-lock-picture="/assets/images/!logged-user.jpg" />
+                            <img src="/assets/images/user.png" alt="Joseph Doe" class="img-circle" data-lock-picture="/assets/images/!logged-user.jpg" />
                         </figure>
                         <div class="profile-info" data-lock-name="John Doe" data-lock-email="johndoe@okler.com">
-                            <span class="name">@{{Name}}</span>
+                            <span class="name">@{{staff_name}}</span>
                             <span class="role"></span>
                         </div>
 
@@ -260,7 +261,7 @@
                             </li>
                         </ul>
                     </div>
-                </div> -->
+                </div>
             </div>
             <!-- end: search & user box -->
         </header>

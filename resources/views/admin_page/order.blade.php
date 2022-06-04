@@ -108,7 +108,13 @@
     <div class="row d-flex justify-content-center">
         <div class="col-xl-7 col-lg-8 col-md-9 col-19 text-center">
             <div class="card">
-                <h3 class="text-center mb-4" id="myModalLabel17">Thông tin đơn hàng</h3>
+                <div style="position:relative;">
+                    <h3 class="text-center mb-4" id="myModalLabel17">Thông tin đơn hàng</h3>
+                    <h5 style="    position: absolute;
+    top: 20px;
+    right: 48px;">Nhân viên: @{{staff.staffname}}</h5>
+                </div>
+               
                     <div class="modal-body">
                         <div class="form-body">
                             <div class="col-xl-12 col-lg-12 col-md-12" style="display:flex;">
@@ -175,7 +181,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn grey btn-outline-secondary">In hóa đơn</button>
+                            <button type="button" class="btn grey btn-outline-secondary" ng-click="print_order(order)">In hóa đơn</button>
                             <button type="button" class="btn grey btn-outline-secondary" data-dismiss="modal">Đóng</button>
                             <button type="button" class="btn btn-outline-primary" ng-click="saveData(order)">Lưu</button>
                         </div>

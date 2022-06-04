@@ -42,15 +42,21 @@
 
             <div class="buy-detail">
                 <div class="order-online" style="padding-bottom: 10px;">
+                <a href="/ordercheck">
                     <button>
                         <h4>Kiểm tra đơn hàng</h4>
                     </button>
+                </a>
+                
                 </div>
 
                 <div class="order-more">
-                    <button>
-                        <h4>Tiếp tục mua hàng</h4>
-                    </button>
+                    <a href="/">
+                        <button>
+                            <h4>Tiếp tục mua hàng</h4>
+                        </button>
+                    </a>
+                    
                 </div>
             </div>
         </div>

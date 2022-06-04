@@ -7,3 +7,9 @@ function convertDate(date) {
     return result;
   }
   
+  myapp.controller('menu', menu);
+  function menu($scope, $http) {
+    $scope.staff_name = JSON.parse(sessionStorage.getItem('login')).staffname;
+
+
+  }

@@ -82,6 +82,8 @@ function OrderController($scope, $http) {
     console.log($scope.data);
   })
 
+  $scope.staff= JSON.parse(sessionStorage.getItem('login'));
+  console.log($scope.staff);
   // connect_api('get',baseApi + order_statusController,(response)=>{
   //   $scope.statuses = response.data;
   // })
@@ -112,5 +114,8 @@ function OrderController($scope, $http) {
     })
   };
   
+  $scope.print_order=function (order){
+    window.open(baseApi+'generate-pdf/'+order.id+'/'+JSON.parse(sessionStorage.getItem('login')).staffname, "_blank").focus();
+  }
   
 }

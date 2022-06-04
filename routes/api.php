@@ -59,6 +59,7 @@ Route::get('orderdetails/count_order', [orderdetailsController::class, 'count_or
 Route::post('orders/get_all', [ordersController::class, 'get_all']);
 Route::post('staffs/checkLogin', [staffsController::class, 'checkLogin']);
 Route::post('orders/update_status', [ordersController::class, 'update_status']);
+
 //GUESS============================================
 Route::post('customers/get', [customersController::class, 'show_cus'])->name('get.show_cus');
 Route::post('cart/update_carts', [cartController::class, 'update_carts'])->name('put.update_carts');

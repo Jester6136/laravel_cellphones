@@ -63,4 +63,4 @@ Route::get('/brand/{id}', function () {
     return view('guess_page.brand');
 });
 
-Route::get('generate-pdf/{id}/{staffName}', [PDFController::class, 'generatePDF']);
+Route::get('api/generate-pdf/{id}/{staffName}', [PDFController::class, 'generatePDF']);

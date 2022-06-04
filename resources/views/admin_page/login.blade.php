@@ -13,6 +13,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- Web Fonts  -->
+    <link rel="icon" href="https://cdn.cellphones.com.vn/media/favicon/default/logo-cps.png">
 		<!-- Vendor CSS -->
 	  <!-- Vendor CSS -->
       <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.css" />

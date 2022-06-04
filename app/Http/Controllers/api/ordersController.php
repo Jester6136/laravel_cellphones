@@ -151,12 +151,12 @@ class ordersController extends Controller
      * @param  \App\Models\orders  $orders
      * @return \Illuminate\Http\Response
      */
-    // public function editStatus($id)
-    // {
-    //     $db = orders::find($id);
-    //     $db->Status = 6;
-    //     $db->save();
-    // }
+    public function editStatus($id)
+    {
+        $db = orders::find($id);
+        $db->Status = 6;
+        $db->save();
+    }
 
     /**
      * Update the specified resource in storage.
