@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\PDFController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +23,18 @@ Route::get('/admin/products', function () {
 
 Route::get('/admin/invoices', function () {
     return view('admin_page.invoices');
+});
+Route::get('/admin/home', function () {
+    return view('admin_page.home');
+});
+Route::get('/admin', function () {
+    return view('admin_page.home');
+});
+Route::get('/admin/order', function () {
+    return view('admin_page.order');
+});
+Route::get('/admin/login', function () {
+    return view('admin_page.login');
 });
 
 Route::get('/productdetail', function () {
@@ -50,3 +62,5 @@ Route::get('/ordercheck', function () {
 Route::get('/brand/{id}', function () {
     return view('guess_page.brand');
 });
+
+Route::get('generate-pdf/{id}/{staffName}', [PDFController::class, 'generatePDF']);

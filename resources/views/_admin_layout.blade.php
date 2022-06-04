@@ -1,3 +1,8 @@
+<script>
+  if(sessionStorage.getItem('login') === null){
+        window.location.replace('/admin/login');
+    }
+</script>
 <!doctype html>
 <html class="fixed">
 <head>
@@ -266,7 +271,7 @@
 
                 <div class="sidebar-header">
                     <div class="sidebar-title">
-                        Navigation
+                        Menu
                     </div>
                     <div class="sidebar-toggle hidden-xs" data-toggle-class="sidebar-left-collapsed" data-target="html" data-fire-event="sidebar-left-toggle">
                         <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
@@ -277,55 +282,49 @@
                     <div class="nano-content">
                         <nav id="menu" class="nav-main" role="navigation">
                             <ul class="nav nav-main">
-                                <li>
-                                    <a href="">
+                                <li ng-click="click_toggle(0)">
+                                    <a href="/admin/home" class="nav-expanded">
                                         <i class="fa fa-home" aria-hidden="true"></i>
-                                        <span>Home</span>
+                                        <span>Trang chủ</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li ng-click="click_toggle(1)">
                                     <a href="">
                                         <i class="fa fa-users" aria-hidden="true"></i>
                                         <span>Quản lý khách hàng</span>
                                     </a>
                                 </li>
-                                <li class="nav-expanded nav-active">
-                                    <a href="">
+                                <li ng-click="click_toggle(2)">
+                                    <a href="/admin/products">
                                         <i class="fa fa-cubes" aria-hidden="true"></i>
                                         <span>Quản lý sản phẩm</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="">
+                                <li ng-click="click_toggle(3)">
+                                    <a href="/admin/categories">
                                         <i class="fa fa-table" aria-hidden="true"></i>
                                         <span>Quản lý loại sản phẩm</span>
                                     </a>
                                 </li>
-                                <li>
+                                <li ng-click="click_toggle(4)">
                                     <a href="">
                                         <i class="fa fa-building" aria-hidden="true"></i>
                                         <span>Quản lý nhà sản xuất</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="">
+                                <li ng-click="click_toggle(5)">
+                                    <a href="/admin/order">
                                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                         <span>Quản lý đơn hàng</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="">
-                                        <i class="fa fa-file-image-o" aria-hidden="true"></i>
-                                        <span>Quản lý ảnh</span>
+                                <li ng-click="click_toggle(6)">
+                                    <a href="/admin/invoices">
+                                    <i class="fa fa-truck" aria-hidden="true"></i>
+                                        <span>Quản lý nhập hàng</span>
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="">
-                                        <i class="fa fa-book" aria-hidden="true"></i>
-                                        <span>Quản lý bài viết</span>
-                                    </a>
-                                </li>
-                                <li>
+                                <li ng-click="click_toggle(7)">
                                     <a href="">
                                         <i class="fa fa-user" aria-hidden="true"></i>
                                         <span>Quản lý nhân viên</span>

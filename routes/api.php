@@ -6,12 +6,15 @@ use App\Http\Controllers\api\productsController;
 use App\Http\Controllers\api\categoriesController;
 use App\Http\Controllers\api\brandsController;
 use App\Http\Controllers\api\customersController;
+use App\Http\Controllers\api\staffsController;
 use App\Http\Controllers\api\memoriesController;
 use App\Http\Controllers\api\colorsController;
 use App\Http\Controllers\api\cartController;
 use App\Http\Controllers\api\ordersController;
+use App\Http\Controllers\api\orderdetailsController;
 use App\Http\Controllers\api\invoicesController;
 use App\Http\Controllers\api\suppliersController;
+use App\Models\orderdetails;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,8 +52,13 @@ Route::get('memories/getcolordetails/{memoryID}', [memoriesController::class, 'g
 Route::get('color/get_basic', [colorsController::class, 'get_basic'])->name('color.get_basic');
 
 
+Route::get('orderdetails/getTopProductSell', [orderdetailsController::class, 'getTopProductSell'])->name('get.getTopProductSell');
+Route::get('orderdetails/total', [orderdetailsController::class, 'total'])->name('get.total');
+Route::get('orderdetails/count_order', [orderdetailsController::class, 'count_order'])->name('get.count_order');
 
-
+Route::post('orders/get_all', [ordersController::class, 'get_all']);
+Route::post('staffs/checkLogin', [staffsController::class, 'checkLogin']);
+Route::post('orders/update_status', [ordersController::class, 'update_status']);
 //GUESS============================================
 Route::post('customers/get', [customersController::class, 'show_cus'])->name('get.show_cus');
 Route::post('cart/update_carts', [cartController::class, 'update_carts'])->name('put.update_carts');

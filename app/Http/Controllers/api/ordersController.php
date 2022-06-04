@@ -77,9 +77,36 @@ class ordersController extends Controller
      * @param  \App\Models\orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function show(orders $orders)
+    public function show($id)
     {
-        //
+        $order= orders::where('is_active',1)->where('id',$id)->first();
+        $order->customer;
+        $orderdetails = $order->orderdetails;
+        foreach($orderdetails as $orderdetail){
+            $color = $orderdetail->color;
+            $color->old_prices;
+            $memory = $color->memory;
+            $memory->product;
+        }
+        return $order;
+    }
+
+    public function get_all()
+    {
+        $orders= orders::where('is_active',1)->orderBy('created_at','DESC')->get();
+        foreach($orders as $order){
+            $order->customer;
+            $orderdetails = $order->orderdetails;
+            foreach($orderdetails as $orderdetail){ 
+                $color = $orderdetail->color;
+                $color->old_prices;
+                $memory = $color->memory;
+                $product = $memory->product;
+                $name = $product->ProductName . ' | ' . $memory->MemoryName .' | '. $color->ColorName;
+                $orderdetail->name = $name;
+            }
+        }
+        return $orders;
     }
 
     public function showByCusID($id)
@@ -94,6 +121,12 @@ class ordersController extends Controller
             $memory->product;
         }
         return $order;
+    }
+
+    public function update_status(Request $request){
+        $db = orders::find($request->id);
+        $db->Status = $request->Status;
+        $db->save();
     }
 
     public function checkOrder($phone,$orderid)
@@ -118,12 +151,12 @@ class ordersController extends Controller
      * @param  \App\Models\orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function editStatus($id)
-    {
-        $db = orders::find($id);
-        $db->Status = 6;
-        $db->save();
-    }
+    // public function editStatus($id)
+    // {
+    //     $db = orders::find($id);
+    //     $db->Status = 6;
+    //     $db->save();
+    // }
 
     /**
      * Update the specified resource in storage.

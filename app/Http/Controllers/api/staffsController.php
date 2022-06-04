@@ -28,6 +28,10 @@ class staffsController extends Controller
         //
     }
 
+    public function checkLogin(Request $request){
+        $staff = staffs::where('Email',$request->email)->where('Password',$request->password)->first();
+        return $staff;
+    }
     /**
      * Store a newly created resource in storage.
      *

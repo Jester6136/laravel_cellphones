@@ -25,14 +25,6 @@
         <div class="main-detail">
             <div class="top-view">
                 <h2>@{{Product.ProductName}}</h2>
-                <div class="rating">
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star"></i>
-                    <i class="fas fa-star dis"></i>
-                    <p>10 đánh giá</p>
-                </div>
             </div>
             <div class="line"></div>
             <div class="product-essential">
@@ -51,22 +43,9 @@
                     </div>
                 </div>
                 <div class="col-7 col-m-11">
-                    <!-- <div class="pos-buy">
-                        <h5>Mua hàng từ: </h5>
-                        <div class="custom-select-wrapper">
-                            <div class="custom-select">
-                                <div class="custom-select__trigger">
-                                    <span>TP.Hà Nội</span>
-                                    <div class="arrow"></div>
-                                </div>
-                                <div class="custom-options">
-                                    <span class="custom-option selected" data-value="hanoi">TP.Hà Nội</span>
-                                    <span class="custom-option" data-value="volvo">TP.Hồ Chí Minh</span>
-                                    <span class="custom-option" data-value="mercedes">Bình Dương</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
+                    <div>
+                        <h4>Chọn sản phẩm</h4>
+                    </div>
                     <div>
                         <div class="price">
                             <p class="special-price">@{{NewPrice}}</p>

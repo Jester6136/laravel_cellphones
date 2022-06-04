@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\colors;
 use App\Models\memories;
 use App\Models\products;
+use App\Models\orderdetails;
 use Illuminate\Http\Request;
 use DateTime;
 
@@ -26,7 +27,7 @@ class productsController extends Controller
         }
         return ['products'=>$products];
     }
-
+    
     public function get15procduct($categoryID)
     {
         $products = products::where('IsActive',1)->where('categoryID',$categoryID)->take(15)->orderBy('ReleaseDate','DESC')->get();

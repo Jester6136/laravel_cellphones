@@ -1,6 +1,4 @@
 @extends('_admin_layout')
-@section('content')
-
 @section('css')    
     <link rel="stylesheet" href="/assets/vendor/select2/select2.css" />
     <link rel="stylesheet" href="/assets/vendor/jquery-datatables-bs3/assets/css/datatables.css" />
@@ -8,11 +6,36 @@
     <link rel="stylesheet" href="/assets/vendor/toast/toastr.min.css" />
     <link rel="stylesheet" href="/assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.css" />
     <link href="/assets/vendor/jquery-datatables-bs3/assets/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+    <style>
+        datalist {
+            position: absolute;
+            max-height: 20em;
+            border: 0 none;
+            overflow-x: hidden;
+            overflow-y: auto;
+            }
+
+            datalist option {
+            font-size: 0.8em;
+            padding: 0.3em 1em;
+            background-color: white;
+            cursor: pointer;
+            }
+
+            /* option active styles */
+            datalist option:hover, datalist option:focus {
+            color: #fff;
+            background-color: #036;
+            outline: 0 none;
+            }
+    </style>
 @stop
+@section('content')
 
 <section role="main" class="content-body" ng-controller="invoicesController">
     <header class="page-header">
-        <h2>Quản lý sản phẩm</h2>
+        <h2>Quản lý nhập hàng</h2>
 
         <div class="right-wrapper pull-right">
             <ol class="breadcrumbs">
@@ -21,7 +44,7 @@
                         <i class="fa fa-home"></i>
                     </a>
                 </li>
-                <li><span>Quản lý sản phẩm</span></li>
+                <li><span>Quản lý nhập hàng</span></li>
             </ol>
 
             <a class="sidebar-right-toggle" data-open="sidebar-right"><i class="fa fa-chevron-left"></i></a>
@@ -35,7 +58,7 @@
                 <a href="#" class="fa fa-caret-down"></a>
                 <a href="#" class="fa fa-times"></a>
             </div>
-            <h2 class="panel-title">Danh sách sản phẩm</h2>
+            <h2 class="panel-title">Danh sách đơn nhập</h2>
         </header>
         <div class="panel-body">
             <div class="row">
@@ -97,7 +120,7 @@
                                     <div class="row" style="display: flex;justify-content: center;">
                                         <div class="form-group" style="width:70%;">
                                             <input class="form-control" placeholder="Tìm kiếm sản phẩm" list="ShowDataList">
-                                            <datalist id="ShowDataList" style="z-index: 100;">
+                                            <datalist id="ShowDataList" style="z-index: 100;overflow-y: auto!important">
                                                 <option value="@{{color.ColorName}}" style="text-align: left;" ng-repeat="color in colors" ng-click="color_selected(color)">@{{color.ColorName}}</option>
                                             </datalist>
                                         </div>

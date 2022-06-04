@@ -452,7 +452,7 @@
                                 </thead>
                                 <tbody id="ettable3">
                                     <tr class="gradeA" ng-repeat="Color in Colors" ng-click="clickColor(Color)">
-                                        <td>@{{$index+1}}</td>
+                                        <td>@{{Color.ColorName}}</td>
                                         <td>@{{Color.prices.Price}}</td>
                                         <td>@{{Color.Quantity}}</td>
                                         <td class="image_index"><img src="/assets/images/@{{Color.ColorImage}}" /></td>
