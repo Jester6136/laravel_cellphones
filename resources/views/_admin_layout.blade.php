@@ -1,9 +1,10 @@
-<script>
-  if(sessionStorage.getItem('login') === null){
-        window.location.replace('/admin/login');
-    }
-</script>
+
 <!doctype html>
+<script>
+    if(sessionStorage.getItem('login') === null){
+            window.location.replace('/admin/login');
+        }
+    </script>
 <html class="fixed">
 <head>
 
@@ -39,7 +40,7 @@
 
     <!-- Head Libs -->
     <script src="/assets/vendor/modernizr/modernizr.js"></script>
-
+   
 </head>
 <body ng-app="Myapp">
     <section class="body">
