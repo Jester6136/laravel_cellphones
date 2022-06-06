@@ -57,6 +57,11 @@ Route::get('orderdetails/total', [orderdetailsController::class, 'total'])->name
 Route::get('orderdetails/count_order', [orderdetailsController::class, 'count_order'])->name('get.count_order');
 
 Route::post('orders/get_all', [ordersController::class, 'get_all']);
+Route::post('orders/getSellYear', [ordersController::class, 'getSellYear']);
+Route::post('orders/getStatusAnalysis', [ordersController::class, 'getStatusAnalysis']);
+
+
+
 Route::post('staffs/checkLogin', [staffsController::class, 'checkLogin']);
 Route::post('orders/update_status', [ordersController::class, 'update_status']);
 
@@ -69,7 +74,8 @@ Route::get('orders/showByCusID/{id}',[ordersController::class, 'showByCusID']);
 Route::get('orders/checkOrder/{phone}/{orderid}',[ordersController::class, 'checkOrder']);
 Route::post('orders/editStatus/{id}',[ordersController::class, 'editStatus']);
 
-Route::get('products/get15procduct/{categoryID}', [productsController::class, 'get15procduct'])->name('get.get15products');
+Route::post('products/get15product', [productsController::class, 'get15product']);
+Route::post('products/get5product', [productsController::class, 'get5product']);
 Route::get('products/getprocductbybrand/{brandID}', [productsController::class, 'getprocductbybrand'])->name('get.getprocductbybrand');
 Route::get('products/getprocductdetail/{productID}', [productsController::class, 'getProductDetails'])->name('get.getprocductdetail');
 //GUESSEND============================================

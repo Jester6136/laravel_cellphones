@@ -19,7 +19,7 @@ class productsController extends Controller
      */
     public function index()
     {
-        $products = products::where('IsActive',1)->where('categoryID',11)->get();
+        $products = products::where('IsActive',1)->get();
         foreach ($products as $product) {
             $product->categories;
             $product->brands;
@@ -28,9 +28,56 @@ class productsController extends Controller
         return ['products'=>$products];
     }
     
-    public function get15procduct($categoryID)
+    public function get15product()
     {
-        $products = products::where('IsActive',1)->where('categoryID',$categoryID)->take(15)->orderBy('ReleaseDate','DESC')->get();
+        $products = products::where('IsActive',1)->where('categoryID',11)->orderBy('ReleaseDate','DESC')->get();
+        foreach($products as $product){
+            $product_id = $product->id;
+            $product_name = $product->ProductName;
+            $product_image = $product->image;
+
+            $product->categories;
+            $product->brands;
+
+            $memories = $product->memories;
+            foreach($memories as $memory){
+                $memory->product_id = $product_id;
+                $memory->ProductName = $product_name . " | " . $memory->MemoryName;
+                $memory->image = $product_image;
+
+                $min_price = 1000000000000000;
+                $old_price = 0;
+                $colors = $memory->colors;
+                $image_product = "";
+                foreach($colors as $color){
+                    if($image_product==""){
+                        $image_product = $color->ColorImage;
+                    }
+                    $price_new = $color->prices;
+                    if($min_price>$price_new->Price){
+                        $min_price = $price_new->Price;
+                    }
+                    $price_old = $color->old_prices;
+                    if($color->old_prices != null){
+                        if($old_price<$price_old->Price){
+                            $old_price = $price_old->Price;
+                        }
+                    }
+                    else
+                        $old_price = $min_price;
+                }
+                $memory->image_product = $image_product;
+                $memory->min_price = $min_price;
+                $memory->old_price = $old_price;
+            }
+        }
+
+        return $products;
+    }
+
+    public function get5product()
+    {
+        $products = products::where('IsActive',1)->where('categoryID',12)->orderBy('ReleaseDate','DESC')->get();
         foreach($products as $product){
             $product_id = $product->id;
             $product_name = $product->ProductName;
@@ -183,7 +230,8 @@ class productsController extends Controller
         $product = new products();
         $product->ProductName = $request->ProductName;
         $product->ReleaseDate = $request->DateRelease;
-        $product->image = $request->ImageName;
+
+        $product->image = $request->Memories[0]['Colors'][0]['ColorImage'];
         $product->BrandID = $request->BrandName;
         $product->CategoryID = $request->CategoryName;
         $product->Description = $request->Description;
@@ -263,7 +311,7 @@ class productsController extends Controller
         $db = products::find($id);
         $db->ProductName = $request->ProductName;
         $db->ReleaseDate = $request->ReleaseDate;
-        $db->image = $request->image;
+        // $db->image = $request->image;
         $db->Description = $request->Description;
         $db->save();
         

@@ -14,7 +14,7 @@ myapp.factory('Product_ROM', function () {
         ProductName : "",
         CategoryName : "",
         BrandName : "",
-        ImageName : ""
+        // ImageName : ""
     };
 });
 
@@ -27,7 +27,7 @@ var ConvertToJsonString = function (Object) {
     var BrandName = Object.BrandName;
     var CategoryName = Object.CategoryName;
     var DateRelease = Object.DateRelease;
-    var ImageName = Object.ImageName;
+    // var ImageName = Object.ImageName;
     var ProductName = Object.ProductName;
     var Memories = Object.Memories;
     var Base_Memories = ``;
@@ -62,7 +62,6 @@ var ConvertToJsonString = function (Object) {
                   "BrandName": "`+ BrandName+`",
                   "CategoryName": "`+ CategoryName + `",
                   "DateRelease": "`+ DateRelease + `",
-                  "ImageName": "`+ ImageName +`",
                   "Memories": [`+ Base_Memories+`],
                   "ProductName": "`+ ProductName +`",
                   "Description": "`+ Object.Description +`"
@@ -340,7 +339,7 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Pr
     $('#dialogConfirmNewProduct').click(function () {
         $rootScope.NewProduct.ProductName = $rootScope.NewProduct.ProductName;
         $rootScope.NewProduct.DateRelease = $('#DateRelease').val();
-        $rootScope.NewProduct.ImageName = $('#imageName')[0].textContent;
+        // $rootScope.NewProduct.ImageName = $('#imageName')[0].textContent;
         $rootScope.NewProduct.CategoryName = $('#cName').val();
         $rootScope.NewProduct.BrandName = $('#brand').val();
         $rootScope.NewProduct.Memories = $rootScope.Memories;
@@ -356,26 +355,26 @@ myapp.controller("addProductController", function ($http, $scope, $rootScope, Pr
             Product_ROM.ProductName = $rootScope.NewProduct.ProductName;
             Product_ROM.CategoryName = $rootScope.NewProduct.CategoryName;
             Product_ROM.BrandName = $rootScope.NewProduct.BrandName;
-            Product_ROM.ImageName = $('#imageName')[0].textContent;
+            // Product_ROM.ImageName = $('#imageName')[0].textContent;
 
             toastr.success("Thêm thông tin sản phẩm thành công");
-
+            $('#dialogAddproduct').hide();
             $rootScope.Products.push(res.data);
 
             Product_ROM.ProductID = "";
             Product_ROM.ProductName = "";
             Product_ROM.CategoryName = "";
             Product_ROM.BrandName = "";
-            Product_ROM.ImageName = "";
+            // Product_ROM.ImageName = "";
             // $rootScope.$apply();
 
             //Reset value table
-            $rootScope.NewProduct.ImageName = '';
+            // $rootScope.NewProduct.ImageName = '';
             $rootScope.NewProduct = {};
             $rootScope.Memories = {};
             $rootScope.Colors = {};
             $rootScope.num = 0;
-            $('#imageName').text('')
+            // $('#imageName').text('')
             $('#colorImage')[0].textContent = "";
             $('#impressive_image').removeClass('fileupload-exists').addClass('fileupload-new');
         })
@@ -526,9 +525,7 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
             if($rootScope.text.textInput!=null){
                 $rootScope.text.textInput=res.data.Description.replaceAll(`###`,`"`);
             }
-
             //Controller EDIT
-
             console.log($scope.Megaproduct);
             //Begin menu category
             connect_api('get',baseApi+categoriesController,(res)=>{
@@ -803,13 +800,13 @@ myapp.controller("editProductController", function ($http, $scope, $rootScope) {
         $scope.Brands = $scope.Categories[index].brands;
     });
 
-    $scope.EditProduct = function (ProductID, ProductName, ReleaseDate) {
+    $scope.EditProduct = function (ProductID, ProductName,image, ReleaseDate) {
         var request = {};
         request.ProductID =ProductID
         request.ProductName =ProductName
         request.ReleaseDate =ReleaseDate
         request.Description =$rootScope.text.textInput.replace(/(\r\n|\n|\r)/gm, "").replaceAll(`"`,`###`);
-        request.image  =$('#eimageName').text();
+        request.image  =image;
         
         console.log(request);
         connect_api_data('put',baseApi+productsController+ProductID,request,(res)=>{

@@ -85,12 +85,12 @@
                  </tr>
                </thead>
                <tbody>
-                 <tr dir-paginate="row in data|filter: q|itemsPerPage:10" current-page="currentPage">
+                 <tr dir-paginate="row in data|filter: q|itemsPerPage:10" current-page="currentPage" pagination-id="paginate1">
                    <td>@{{$index+1}}</td>
                    <td>@{{row.invoice_date}}</td>
                    <td>@{{row.suppliers.supplier_name}}</td>
                    <td align="right">@{{row.total}}</td>
-                   <td>@{{row.status}}</td>
+                   <td>@{{row.status_name}}</td>
                     
                    <td class="actions" style="width:65px;">
                        <a href="" class="on-default editt-row" ng-click="openModal(row.id)" data-toggle="tooltip" title="Sửa"><i class="fa fa-pencil"></i></a>
@@ -103,6 +103,7 @@
             <dir-pagination-controls style="float: right; padding-right: 100px;"
                 direction-links="true"
                 boundary-links="true"
+                pagination-id="paginate1"
                 >
             </dir-pagination-controls>
         </div>
@@ -118,11 +119,14 @@
                             <div class="col-xl-12 col-lg-12 col-md-12" style="display:flex;">
                                 <div class="col-xl-8 col-lg-8 col-md-8 block"  style="background: oldlace;padding: 20px;border-radius: 6px;">
                                     <div class="row" style="display: flex;justify-content: center;">
-                                        <div class="form-group" style="width:70%;">
+                                        <div class="form-group" style="width:70%;" ng-if="is_create">
                                             <input class="form-control" placeholder="Tìm kiếm sản phẩm" list="ShowDataList">
                                             <datalist id="ShowDataList" style="z-index: 100;overflow-y: auto!important">
                                                 <option value="@{{color.ColorName}}" style="text-align: left;" ng-repeat="color in colors" ng-click="color_selected(color)">@{{color.ColorName}}</option>
                                             </datalist>
+                                        </div>
+                                        <div class="form-group" style="width:70%;" ng-if="!is_create">
+                                            <input class="form-control" placeholder="Tìm kiếm sản phẩm" ng-model="qt">
                                         </div>
                                     </div>
                                     <div class="row">
@@ -154,7 +158,7 @@
                                             <thead>
                                             <tr>
                                                 <th>STT</th>
-                                                <th>Tên sách</th>
+                                                <th style="width:35%">Tên sách</th>
                                                 <th>Tồn kho</th>
                                                 <th>Đơn giá</th>
                                                 <th>Số lượng</th>
@@ -164,9 +168,9 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr ng-repeat="row in invoice_details" ng-click="selected_row(row)">
+                                            <tr dir-paginate="row in invoice_details| filter: qt |itemsPerPage:6" current-page="currentPage2" ng-click="selected_row(row)" pagination-id="paginate2">
                                                 <td>@{{$index+1}}</td>
-                                                <td>@{{row.color.ColorName}}</td>
+                                                <td align="left">@{{row.color.ColorName}}</td>
                                                 <td>@{{row.color.Quantity}}</td>
                                                 <td>@{{row.price}}</td>
                                                 <td>@{{row.quantity}}</td>
@@ -183,6 +187,10 @@
                                             </tr>
                                             </tbody>
                                         </table>
+                                        <dir-pagination-controls style="float: right; padding-right: 100px;"
+                                            direction-links="true"
+                                            boundary-links="true" pagination-id="paginate2">
+                                        </dir-pagination-controls>
                                     </div>
                                 </div>
                                 <div class="col-xl-4 col-lg-4 col-md-4">
@@ -220,6 +228,13 @@
                                         <div class="form-group col-sm-12 flex-column d-flex">
                                             <label class="form-control-label px-3">Tổng tiền phải trả<span class="text-danger"></span></label>
                                             <input ng-model="invoice.total" readonly  type="number" min='0' readonly>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-between text-left" style="display: flex;">
+                                        <div class="form-group col-xl-12 col-lg-12 col-md-12" style="display: flex;align-items: center;justify-content: space-between;">
+                                            <select class="form-control col-xl-12 col-lg-12 col-md-12" ng-model="invoice.status" ng-options="status.id as status.name for status in InvoiceStatus">
+                                                <option value="" selected disabled>Trạng thái</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

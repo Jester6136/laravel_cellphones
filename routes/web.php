@@ -33,6 +33,9 @@ Route::get('/admin', function () {
 Route::get('/admin/order', function () {
     return view('admin_page.order');
 });
+Route::get('/admin/order/now', function () {
+    return view('admin_page.order');
+});
 Route::get('/admin/login', function () {
     return view('admin_page.login');
 });

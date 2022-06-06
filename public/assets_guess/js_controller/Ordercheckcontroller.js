@@ -38,6 +38,7 @@ myapp.controller('ordercheckController', function ($http, $scope, $rootScope) {
             $scope.status = true;
             console.log(res.data);
             $scope.order = res.data;
+            $scope.order.Amount = numberFormat.format($scope.order.Amount)
             for(var i = 0 ; i<OrderStatus.length;i++){
                 var element = OrderStatus[i];
                 if(element.id == $scope.order.Status){

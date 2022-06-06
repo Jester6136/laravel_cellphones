@@ -48,6 +48,15 @@ function OrderController($scope, $http) {
       (error) => {console.log(error);toastr.error(errorStatus);}
     );
    }
+   
+   function convertDatetoDay(date) {
+    let result;
+    if (date)
+      date = new Date(date);
+      result = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    return result;
+  }
+   
   var connect_api_data = function (method,url,data,callback) { 
     $http({
       method: method,
@@ -63,6 +72,12 @@ function OrderController($scope, $http) {
    }
 
   $scope.finding = "";
+  $scope.tmp = {};
+
+  if(window.location.pathname=='/admin/order/now'){
+    $scope.tmp.created_at = convertDatetoDay(new Date());
+  }
+
   $scope.currentPage = 1;
   $scope.pageSize = 10;
   $scope.item;

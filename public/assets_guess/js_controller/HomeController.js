@@ -17,9 +17,26 @@ myapp.controller('homeController', function ($http, $scope, $rootScope) {
 
     $scope.Products = [];
 
-    connect_api('get',baseApi+productsController+'get15procduct/'+'11',(res)=>{
+    connect_api('post',baseApi+productsController+'get15product',(res)=>{
         var data = res.data;
+        var Products =[];
 
+        data.forEach((product)=>{
+            var memories = product.memories;
+            memories.forEach((memory)=>{
+                memory.old_price = numberFormat.format(memory.old_price)
+                memory.min_price = numberFormat.format(memory.min_price)
+                Products.push(memory);
+            })
+        })
+        Products = Products.slice(0,15);
+        $scope.Products = Products;
+
+    },"")
+
+    connect_api('post',baseApi+productsController+'get5product',(res)=>{
+        console.log(res);
+        var data = res.data;
         var Products =[];
 
         data.forEach((product)=>{
@@ -32,7 +49,9 @@ myapp.controller('homeController', function ($http, $scope, $rootScope) {
         })
 
         console.log(Products);
-        $scope.Products = Products;
+        
+        Products = Products.slice(0,5);
+        $scope.Computer_Products = Products;
 
     },"")
 

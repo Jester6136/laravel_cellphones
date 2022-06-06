@@ -38,15 +38,37 @@ function InvoicesController($scope, $http) {
    }
   //set begin
   $scope.currentPage = 1;
+  $scope.currentPage2 = 1;
   $scope.pageSize = 10;
   $scope.q = "";
+  $scope.qt = "";
   $scope.total_invoice = 0;
+  
+  $scope.InvoiceStatus = [
+    {
+        "id":1,
+        "name":"Đặt hàng"
+    },
+    {
+        "id":2,
+        "name":"Đang giao dịch"
+    },
+    {
+        "id":3,
+        "name":"Hoàn thành"
+    },
+    {
+        "id":4,
+        "name":"Đã hủy"
+    }
+];
   //get all invoices
   connect_api('get',baseApi + invoicesController,(response)=>{
     $scope.data = response.data;
     console.log($scope.data);
     $scope.data.forEach((item)=>{
-      item.invoice_date = convertDate(item.invoice_date)
+      item.invoice_date = convertDate(item.invoice_date);
+      item.status_name = $scope.InvoiceStatus.find((x)=>x.id==item.status).name;
     })
   })
 
@@ -67,6 +89,7 @@ function InvoicesController($scope, $http) {
     // CKEDITOR.replace( 'des' );
     $scope.id = id;
     if (id == 0) {
+      $scope.is_create = true;
       $scope.invoice_details = [];
       $scope.invoice = {};
       $scope.invoice.discount = 0;
@@ -79,6 +102,7 @@ function InvoicesController($scope, $http) {
       $scope.modalTitle = 'Nhập hàng';
       $scope.color = null;
     } else {
+      $scope.is_create = false;
       $scope.invoice_details = [];
       $scope.invoice = {};
       $scope.invoice.discount = 0;
@@ -116,26 +140,27 @@ function InvoicesController($scope, $http) {
     //Insert
     if ($scope.id == 0) {
       $scope.invoice.invoice_details = $scope.invoice_details;
-      $scope.invoice.status = 4;
+      $scope.invoice.status_name = $scope.InvoiceStatus.find((x)=>x.id==$scope.invoice.status).name;
       var time = new Date();
       $scope.invoice.invoice_date = convertDate(time);
       
       connect_api_data('POST',baseApi+invoicesController,$scope.invoice,(res)=>{
         $scope.invoice.id = res.data.id;
         $scope.data.push($scope.invoice);
+        toastr.success('Thêm thành công');
         modalE.modal('hide');
       })
     } else {
       //Update
       $scope.invoice.invoice_details = $scope.invoice_details;
-      $scope.invoice.status = 4;
       var time = new Date();
       $scope.invoice.invoice_date = convertDate(time);
-      
+      $scope.invoice.status_name = $scope.InvoiceStatus.find((x)=>x.id==$scope.invoice.status).name;
       connect_api_data('PUT',baseApi+invoicesController+$scope.id,$scope.invoice,(res)=>{
         console.log(res);
         var objIndex = $scope.data.findIndex((obj => obj.id == $scope.id));
         $scope.data[objIndex] = $scope.invoice; 
+        toastr.success('Cập nhật thành công');
         modalE.modal('hide');
       })
     }
@@ -229,7 +254,7 @@ function InvoicesController($scope, $http) {
     }
     $scope.selected_invoice_details = {};
   }
-
+  
   $scope.deleteClick_createform = function (row){
     console.log(row);
     var objIndex = $scope.invoice_details.findIndex((obj => obj.colorID == row.colorID))

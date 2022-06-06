@@ -54,17 +54,24 @@
                 <!-- @*Test*@ -->
                 <thead>
                     <tr>
+                        <th style="width:10%;" colspan="2"></th>
+                        <th style="width:25%;"><input ng-model="tmp.ProductName" placeholder="Sản phẩm..." type="text" style="width:100%;"></th>
+                        <th style="width:15%;"><input ng-model="tmp.categories.CategoryName" placeholder="Loại..." type="text" style="width:100%;"></th>
+                        <th style="width:15%;"><input ng-model="tmp.brands.BrandName" placeholder="Hãng..." type="text" style="width:100%;"></th>
+                        <th style="width:20%;" colspan="2"></th>
+                    </tr>
+                    <tr>
                         <th></th>
                         <th>STT</th>
                         <th>Tên sản phẩm</th>
                         <th>Loại SP</th>
                         <th>Hãng SP</th>
                         <th>Ảnh chính</th>
-                        <th style="width:55px;">Tác vụ</th>
+                        <th>Tác vụ</th>
                     </tr>
                 </thead>
                 <tbody id="ttable">
-                <tr dir-paginate="Product in Products|filter: q|itemsPerPage:6" current-page="currentPage">
+                <tr dir-paginate="Product in Products|orderBy:'-id'|filter: q|filter: tmp|itemsPerPage:7" current-page="currentPage">
                         <td class=" text-center">
                             <i data-toggle="" class="fa fa-plus-square-o text-primary h5 m-none" id="" style="cursor: pointer;"></i>
                         </td>
@@ -121,43 +128,29 @@
                 <form class="form-card" id="frmadd">
                     <div class="block" style=" background: seashell;">
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-4 flex-column d-flex"> <label class="form-control-label px-3">Mã sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="fid" name="fid" placeholder="Nhập mã" required readonly> </div>
-                            <div class="form-group col-sm-4 flex-column d-flex"> <label class="form-control-label px-3">Tên sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="fname" name="fname" placeholder="Nhập Tên" ng-model="NewProduct.ProductName" required> </div>
-                            <div class="form-group col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-3 flex-column d-flex"> <label class="form-control-label px-3">Tên sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="fname" name="fname" placeholder="Nhập Tên" ng-model="NewProduct.ProductName" required> </div>
+                            <div class="form-group col-sm-3 flex-column d-flex">
                                 <label class="form-control-label px-3">Ngày ra mắt<span class="text-danger"> *</span></label>
                                 <input id="DateRelease" data-plugin-datepicker name="OrderDate" readonly autocomplete="on" ng-model="NewProduct.DateRelease" required>
                             </div>
-                        </div>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-3 flex-column d-flex">
                                 <label class="form-control-label px-3">Loại sản phẩm<span class="text-danger"> *</span></label>
                                 <select class="selectpicker category" id="cName" style="border: 1px solid #ccc; font-size: 14px;" ng-model="NewProduct.CategoryName">
                                     <option ng-repeat="Category in Categories" class="@{{Category.STT}}" value="@{{Category.id}}">@{{Category.CategoryName}}</option>
                                 </select>
                             </div>
-
-                            <div class="form-group col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-3 flex-column d-flex">
                                 <label class="form-control-label px-3">Hãng sản xuất<span class="text-danger"> *</span></label>
                                 <select id="brand" class="selectpicker" style="border: 1px solid #ccc; font-size: 14px;" ng-model="NewProduct.BrandName">
                                     <option ng-repeat="Brand in Brands" value="@{{Brand.id}}">@{{Brand.BrandName}}</option>
                                 </select>
                             </div>
-                            <div class="form-group col-sm-4 flex-column d-flex">
-                                <label class="form-control-label px-3">Ảnh chính<span class="text-danger"> *</span></label>
-                                <div class="fileupload fileupload-new" data-provides="fileupload" style="width: 100%;" id="impressive_image">
-                                    <div class="input-append">
-                                        <div class="uneditable-input">
-                                            <span class="fileupload-preview" id="imageName" ></span>
-                                        </div>
-                                        <span class="btn btn-default btn-file">
-                                            <span class="fileupload-exists">Thay đổi</span>
-                                            <span class="fileupload-new">Chọn ảnh</span>
-                                            <input id="imageProduct" type="file" accept="image/*">
-                                        </span>
-                                        <a href="#" class="btn btn-default fileupload-exists" data-dismiss="fileupload">Remove</a>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="row justify-content-between text-left">
+                            
+
+                            
+                            
                         </div>
                     </div>
 
@@ -169,11 +162,6 @@
                                         <label class="form-control-label px-3">Bộ nhớ<span class="text-danger"> *</span></label>
                                         <input type="text" id="memory" list="memo" ng-model="Memory.MemoryName"/>
                                         <datalist id="memo">
-                                            <option>2GB</option>
-                                            <option>4GB</option>
-                                            <option selected>8GB</option>
-                                            <option>16GB</option>
-                                            <option>32GB</option>
                                             <option>64GB</option>
                                             <option>128GB</option>
                                             <option>512GB</option>
@@ -263,8 +251,8 @@
                                 <tbody id="ttable3">
                                     <tr class="gradeA" ng-repeat="Color in Colors">
                                         <td>@{{Color.ColorName}}</td>
-                                        <td>@{{Color.Price}}</td>
-                                        <td>@{{Color.Quantity}}</td>
+                                        <td>@{{Color.Price|number}}</td>
+                                        <td>@{{Color.Quantity|number}}</td>
                                         <td class="image_index"><img src="/assets/images/@{{Color.ColorImage}}" /></td>
                                         <td class="actions" style="width:65px;">
                                             <a href="#" class="on-default removeColor"><i class="fa fa-trash-o"></i></a>
@@ -280,8 +268,6 @@
                             <fieldset class="form-group">
                             <label for="description">Mô tả</label>
                             <div ckeditor="text.options" ng-model="text.textInput">
-                                <!-- <ckeditor ng-model="book.description"></ckeditor> -->
-                                <!-- <textarea name="description" class="form-control" id="description" (data)="book.description"  rows="8"></textarea> -->
                             </fieldset>
                         </div>
                     </div>
@@ -308,22 +294,19 @@
                 <form class="form-card" id="frmedit">
                     <div class="block" style=" background: seashell;">
                         <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-4 flex-column d-flex"> <label class="form-control-label px-3">Mã sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="eid" name="eid" placeholder="Nhập mã" required readonly ng-model="Megaproduct.ProductID"></div>
-                            <div class="form-group col-sm-4 flex-column d-flex"> <label class="form-control-label px-3">Tên sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="ename" name="fname" placeholder="Nhập Tên" required ng-model="Megaproduct.ProductName"></div>
-                            <div class="form-group col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-2 flex-column d-flex"> <label class="form-control-label px-3">Tên sản phẩm<span class="text-danger"> *</span></label> <input type="text" id="ename" name="fname" placeholder="Nhập Tên" required ng-model="Megaproduct.ProductName"></div>
+                            <div class="form-group col-sm-2 flex-column d-flex">
                                 <label class="form-control-label px-3">Ngày ra mắt<span class="text-danger"> *</span></label>
                                 <input id="eDateRelease" data-plugin-datepicker name="OrderDate" readonly autocomplete="off" ng-model="Megaproduct.ReleaseDate" required>
                             </div>
-                        </div>
-                        <div class="row justify-content-between text-left">
-                            <div class="form-group col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-2 flex-column d-flex">
                                 <label class="form-control-label px-3">Loại sản phẩm<span class="text-danger"> *</span></label>
                                 <select class="selectpicker ecategory" style="border: 1px solid #ccc; font-size: 14px;" ng-model="Megaproduct.categories.CategoryName">
                                     <option ng-repeat="Category in Categories" class="@{{Category.STT}}">@{{Category.CategoryName}}</option>
                                 </select>
                             </div>
 
-                            <div class="form-group col-sm-4 flex-column d-flex">
+                            <div class="form-group col-sm-2 flex-column d-flex">
                                 <label class="form-control-label px-3">Hãng sản xuất<span class="text-danger"> *</span></label>
                                 <select id="ebrand" class="selectpicker" style="border: 1px solid #ccc; font-size: 14px;" ng-model="Megaproduct.brands.BrandName">
                                     <option ng-repeat="Brand in Brands">@{{Brand.BrandName}}</option>
@@ -346,6 +329,9 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row justify-content-between text-left">
+                            
+                        </div>
                     </div>
 
                     <div class="col-20" style="display: flex;">
@@ -356,11 +342,6 @@
                                         <label class="form-control-label px-3">Bộ nhớ<span class="text-danger"> *</span></label>
                                         <input type="text" id="ememory" list="memo" ng-model="MemoryName" />
                                         <datalist id="ememo">
-                                            <option>2GB</option>
-                                            <option>4GB</option>
-                                            <option selected>8GB</option>
-                                            <option>16GB</option>
-                                            <option>32GB</option>
                                             <option>64GB</option>
                                             <option>128GB</option>
                                             <option>512GB</option>
@@ -453,8 +434,8 @@
                                 <tbody id="ettable3">
                                     <tr class="gradeA" ng-repeat="Color in Colors" ng-click="clickColor(Color)">
                                         <td>@{{Color.ColorName}}</td>
-                                        <td>@{{Color.prices.Price}}</td>
-                                        <td>@{{Color.Quantity}}</td>
+                                        <td>@{{Color.prices.Price | number}}</td>
+                                        <td>@{{Color.Quantity |number}}</td>
                                         <td class="image_index"><img src="/assets/images/@{{Color.ColorImage}}" /></td>
                                         <td class="actions" style="width:65px;">
                                             <a href="" class="on-default removeColor" ng-click="eRemoveColor(Color)"><i class="fa fa-trash-o"></i></a>
@@ -477,7 +458,7 @@
                     <footer class="" style="padding: 15px 0px;">
                         <div class="row">
                             <div class="col-md-12 text-right">
-                                <button id="dialogConfirmEditProduct" class="btn btn-primary  save" type="button" ng-click="EditProduct(Megaproduct.id,Megaproduct.ProductName,Megaproduct.ReleaseDate)">Lưu</button>
+                                <button id="dialogConfirmEditProduct" class="btn btn-primary  save" type="button" ng-click="EditProduct(Megaproduct.id,Megaproduct.ProductName,Megaproduct.image,Megaproduct.ReleaseDate)">Lưu</button>
                                 <button id="dialogCancelEditProduct" class="btn btn-default  exit" type="button">Đóng</button>
                             </div>
                         </div>

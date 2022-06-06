@@ -290,28 +290,10 @@
                                         <span>Trang chủ</span>
                                     </a>
                                 </li>
-                                <li ng-click="click_toggle(1)">
-                                    <a href="">
-                                        <i class="fa fa-users" aria-hidden="true"></i>
-                                        <span>Quản lý khách hàng</span>
-                                    </a>
-                                </li>
                                 <li ng-click="click_toggle(2)">
                                     <a href="/admin/products">
                                         <i class="fa fa-cubes" aria-hidden="true"></i>
                                         <span>Quản lý sản phẩm</span>
-                                    </a>
-                                </li>
-                                <li ng-click="click_toggle(3)">
-                                    <a href="/admin/categories">
-                                        <i class="fa fa-table" aria-hidden="true"></i>
-                                        <span>Quản lý loại sản phẩm</span>
-                                    </a>
-                                </li>
-                                <li ng-click="click_toggle(4)">
-                                    <a href="">
-                                        <i class="fa fa-building" aria-hidden="true"></i>
-                                        <span>Quản lý nhà sản xuất</span>
                                     </a>
                                 </li>
                                 <li ng-click="click_toggle(5)">
@@ -330,6 +312,25 @@
                                     <a href="">
                                         <i class="fa fa-user" aria-hidden="true"></i>
                                         <span>Quản lý nhân viên</span>
+                                    </a>
+                                </li>
+                                <li ng-click="click_toggle(1)">
+                                    <a href="">
+                                        <i class="fa fa-users" aria-hidden="true"></i>
+                                        <span>Quản lý khách hàng</span>
+                                    </a>
+                                </li>
+                                <li ng-click="click_toggle(4)">
+                                    <a href="">
+                                        <i class="fa fa-building" aria-hidden="true"></i>
+                                        <span>Quản lý nhà sản xuất</span>
+                                    </a>
+                                </li>
+                                
+                                <li ng-click="click_toggle(3)">
+                                    <a href="/admin/categories">
+                                        <i class="fa fa-table" aria-hidden="true"></i>
+                                        <span>Quản lý loại sản phẩm</span>
                                     </a>
                                 </li>
                             </ul>

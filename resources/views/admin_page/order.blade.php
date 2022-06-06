@@ -71,6 +71,15 @@
             <table class="table table-bordered table-striped mb-none">
                <thead>
                  <tr>   
+                   <th  style="width:10%;" ><input ng-model="tmp.id" type="text" placeholder="Mã..." style="width:100%;"></th>
+                   <th style="width:15%;"><input ng-model="tmp.created_at" type="text" placeholder="Thời gian..." style="width:100%;"></th>
+                   <th style="width:15%;"><input ng-model="tmp.customer.CustomerName" type="text" placeholder="Họ tên.." style="width:100%;"></th>
+                   <th style="width:15%;"><input ng-model="tmp.Phone" type="text" placeholder="SĐT..." style="width:100%;"></th>
+                   <th style="width:15%;"><input ng-model="tmp.Amount" type="text" placeholder="Tổng cộng..." style="width:100%;"></th>
+                   <th style="width:15%;"><input ng-model="tmp.Status_name" type="text" placeholder="Trạng thái..." style="width:100%;"></th>
+                   <th style="width:5%;"></th>
+                 </tr>
+                 <tr>   
                    <th  style="width:10%;" >Mã đơn hàng</th>
                    <th>Thời gian</th>
                    <th>Khách hàng</th>
@@ -81,7 +90,7 @@
                  </tr>
                </thead>
                <tbody>
-                    <tr dir-paginate="row in data| orderBy:'+':true |filter: finding|itemsPerPage:10" current-page="currentPage">
+                    <tr dir-paginate="row in data| orderBy:'+':true |filter: finding|filter: tmp|itemsPerPage:10" current-page="currentPage">
                       <td>@{{row.id}}</td>
                       <td>@{{row.created_at}}</td>
                       <td>@{{row.customer.CustomerName}}</td>

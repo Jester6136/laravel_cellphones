@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\invoices;
+use App\Models\colors;
 use App\Models\invoice_details;
 use Illuminate\Http\Request;
 use DateTime;
@@ -47,7 +48,7 @@ class invoicesController extends Controller
         $invoice->invoice_date = new DateTime();
         $invoice->total = $request->total;
         $invoice->discount = $request->discount;
-        $invoice->status = 4;
+        $invoice->status = $request->status;
         $invoice->save();
 
         $id = $invoice->id;
@@ -62,6 +63,10 @@ class invoicesController extends Controller
             $db_invoice_detail->price = $invoice_detail['price'];
             $db_invoice_detail->total = $invoice_detail['total'];
             $db_invoice_detail->save();
+
+            $color = colors::find($invoice_detail['colorID']);
+            $color->Quantity = $invoice_detail['quantity'] + $color->Quantity;
+            $color->save();
         }
         return $invoice;
     }
@@ -112,7 +117,7 @@ class invoicesController extends Controller
         $invoice->staffID = $request->staffID;
         $invoice->total = $request->total;
         $invoice->discount = $request->discount;
-        $invoice->status = 4;
+        $invoice->status = $request->status;
         $invoice->save();
 
         $invoice_details = $request['invoice_details'];

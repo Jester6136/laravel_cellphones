@@ -18,7 +18,6 @@
         </div>
     </header>
 
-
     <div class="col-md-6 col-lg-12 col-xl-6" style="font-size:12px !important;">
         <div class="row">
             <div class="col-md-12 col-lg-6 col-xl-6">
@@ -59,7 +58,7 @@
                                     </div>
                                 </div>
                                 <div class="summary-footer">
-                                    <a class="text-muted text-uppercase">Xem chi tiết</a>
+                                    <a href="/admin/order/now" class="text-muted text-uppercase" style="cursor: pointer;">Xem chi tiết</a>
                                 </div>
                             </div>
                         </div>
@@ -67,39 +66,65 @@
                 </section>
             </div>
         </div>
-        <section class="panel" >
-        <header class="panel-heading">
-            <h2 class="panel-title">Sản phẩm bán chạy trong tháng</h2>
-        </header>
-        <div class="panel-body">
-            <table class="table table-bordered table-striped mb-none">
-               <thead>
-                 <tr>
-                   <th style="width: 5%;">STT</th>
-                   <th>Sản phẩm</th>
-                   <th>Hình ảnh</th>
-                   <th>Số lượng đã bán</th>
-                   <th>Tổng thu</th>
-                 </tr>
-               </thead>
-               <tbody>
-                 <tr ng-repeat="row in orderdetails">
-                   <td style="width: 5%;">@{{$index+1}}</td>
-                   <td>@{{row.name}}</td>
-                   <td class="image_index"><img style="    height: 45px;" src="/assets/images/@{{row.color.ColorImage}}" alt="Alternate Text" /></td>
-                   <td align="right">@{{row.Quantity}}</td>
-                   <td align="right">@{{row.Quantity * row.single_price}}</td>
-                 </tr>
-               </tbody>
-            </table>
+        
+        <div class="row" style="display: flex;justify-content: space-between;">
+            <section class="panel" style="width:72%;">
+                <header class="panel-heading">
+                    <h2 class="panel-title">Sản phẩm bán chạy trong tháng</h2>
+                </header>
+                <div class="panel-body">
+                    <table class="table table-bordered table-striped mb-none">
+                    <thead>
+                        <tr>
+                        <th style="width: 5%;">STT</th>
+                        <th>Sản phẩm</th>
+                        <th>Hình ảnh</th>
+                        <th>Loại sản phẩm</th>
+                        <th>Số lượng đã bán</th>
+                        <th>Tổng thu dự kiến</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="row in orderdetails">
+                        <td style="width: 5%;">@{{$index+1}}</td>
+                        <td>@{{row.name}}</td>
+                        <td class="image_index"><img style="    height: 45px;" src="/assets/images/@{{row.color.ColorImage}}" alt="Alternate Text" /></td>
+                        <td align="right">@{{row.color.memory.product.categories.CategoryName}}</td>
+                        <td align="right">@{{row.Quantity}}</td>
+                        <td align="right">@{{row.Quantity * row.single_price}}</td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </section>
+            <section class="panel" style="width:26%;">
+                <header class="panel-heading">
+                    <h2 class="panel-title">Thống kê trạng thái đơn hàng</h2>
+                </header>
+                <div class="panel-body">
+                    <div class="chart">
+                        <canvas id="myChart" ></canvas>
+                    </div>
+                </div>
+            </section>
         </div>
-    </section>
+
+        <section class="panel">
+            <header class="panel-heading">
+                <h2 class="panel-title">Doanh số bán hàng theo tháng</h2>
+            </header>
+            <div class="panel-body">
+                    <div class="chart">
+                      <canvas id="myChart2" height="80px"></canvas>
+                    </div>
+            </div>
+        </section>
     </div>
 </section>
 @stop
 
-
 @section('js')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="//cdn.ckeditor.com/4.18.0/standard/ckeditor.js"></script>
     <script src="/assets/js_controller/angular_path/angular-ckeditor.js"></script>
     <script src="/assets/js_controller/HomeController.js"></script>

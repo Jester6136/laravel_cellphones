@@ -15,6 +15,7 @@ class orderdetailsController extends Controller
             $color = $orderdetail->color;
             $memory = $color->memory;
             $product = $memory->product;
+            $product->categories;
             $name = $product->ProductName . ' | ' . $memory->MemoryName .' | '. $color->ColorName;
             $orderdetail->name = $name;
         }
@@ -22,10 +23,13 @@ class orderdetailsController extends Controller
     }
 
     public function total(){
-        $orderdetails = orderdetails::whereMonth('created_at', date('m'))->get();
+        $orders = orders::where('is_active',1)->where('Status',5)->whereMonth('created_at', date('m'))->get();
         $total = 0;
-        foreach($orderdetails as $orderdetail){
-            $total +=$orderdetail->Quantity * $orderdetail->single_price;
+        foreach($orders as $order){
+            $orderdetails = $order->orderdetails;
+            foreach($orderdetails as $od){
+                $total +=$od->Quantity * $od->single_price;
+            }
         }
         return $total;    
     }
